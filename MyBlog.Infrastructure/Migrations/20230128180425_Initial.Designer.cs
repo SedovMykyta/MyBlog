@@ -11,7 +11,7 @@ using MyBlog.Infrastructure;
 
 namespace MyBlog.Infrastructure.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(MyBlogContext))]
     [Migration("20230128180425_Initial")]
     partial class Initial
     {

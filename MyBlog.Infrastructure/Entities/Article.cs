@@ -6,12 +6,9 @@ public class Article
 
     public int UserId { get; set; }
 
-    public string Name { get; set; }
+    public string Title { get; set; }
 
-    public string Desctiprion { get; set; }
+    public string Description { get; set; }
 
     public string FullText { get; set; }
-
-    //Для хранения картинки к статье, я не уверен что именно так выглядит поле для нее, но допустим
-    public byte[]? Image { get; set; }
 }

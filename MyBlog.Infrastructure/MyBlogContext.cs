@@ -3,9 +3,9 @@ using MyBlog.Infrastructure.Entities;
 
 namespace MyBlog.Infrastructure;
 
-public class ApplicationDbContext : DbContext
+public class MyBlogContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions options) : base(options)
+    public MyBlogContext(DbContextOptions<MyBlogContext> options) : base(options)
     {
         
     }

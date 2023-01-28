@@ -14,9 +14,11 @@ public class User
 
     public string Email { get; set; }
 
+    public string Phone { get; set; }
+
     public Role Role { get; set; }
 
-    public DateTime DateCreateAccount { get; set; }
+    public DateTime DateCreateAccount { get; set; } = DateTime.Now;
 
     public List<Article> Articles { get; set; }
 }

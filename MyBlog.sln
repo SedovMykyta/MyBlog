@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.API", "MyBlog.API\MyBlog.API.csproj", "{1C513AAD-FC6F-4E4D-B1F4-539B2D678447}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.Service", "MyBlog.Service\MyBlog.Service.csproj", "{87C0A228-EDAC-476E-A8B8-BC38E1DAC16A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.Services", "MyBlog.Services\MyBlog.Services.csproj", "{87C0A228-EDAC-476E-A8B8-BC38E1DAC16A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBlog.Infrastructure", "MyBlog.Infrastructure\MyBlog.Infrastructure.csproj", "{648983D9-4737-42DF-91CA-E2F733A7A7DE}"
 EndProject
