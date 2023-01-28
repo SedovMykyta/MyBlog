@@ -1,5 +1,8 @@
 ﻿using System.Net;
+using System.Net.Mime;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using MyBlog.Service.Exception;
 
 namespace MyBlog.Middlewares.ExceptionHandling;
 
@@ -7,7 +10,7 @@ public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-
+    private const string InternalServerErrorMessage = "Internal Server Error";
 
     public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
@@ -24,28 +27,33 @@ public class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             await HandleExceptionAsync(
-                httpContext, ex.Message, HttpStatusCode.InternalServerError, "Internal server error");
+                ex, httpContext);
         }
     }
 
     private async Task HandleExceptionAsync(
-        HttpContext context, string exMsg, HttpStatusCode httpStatusCode, string message)
+        Exception ex, HttpContext context)
     {
-        _logger.LogError(exMsg);
+        _logger.LogError(ex.Message);
 
-        HttpResponse response = context.Response;
+        var response = context.Response;
+        
+        response.ContentType = MediaTypeNames.Application.Json;
 
-        response.ContentType = "application/json";
-        response.StatusCode = (int)httpStatusCode;
-
-        ErrorDto errorDto = new()
+        ErrorDto errorDto = new();
+        
+        if (ex is CustomException customException)
         {
-            Message = message,
-            StatusCode = (int)httpStatusCode
-        };
+            response.StatusCode = (int)customException.ResponseStatusCode;
+            errorDto.ErrorMessage = customException.Message;
+        }
+        else
+        {
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            errorDto.ErrorMessage = InternalServerErrorMessage;
+        }
 
-        string result = JsonSerializer.Serialize(errorDto);
 
-        await response.WriteAsJsonAsync(result);
+        await response.WriteAsJsonAsync(errorDto, new JsonSerializerOptions(JsonSerializerDefaults.Web));
     }
 }

@@ -4,12 +4,5 @@ namespace MyBlog.Middlewares.ExceptionHandling;
 
 public class ErrorDto
 {
-    public int StatusCode { get; set; }
-
-    public string? Message { get; set; }
-
-    public override string ToString()
-    {
-        return JsonSerializer.Serialize(this);
-    }
+    public string? ErrorMessage { get; set; }
 }
