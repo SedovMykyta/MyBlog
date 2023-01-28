@@ -7,4 +7,8 @@
         <RootNamespace>MyBlog.Service</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MyBlog.Infrastructure\MyBlog.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
