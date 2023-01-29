@@ -28,6 +28,7 @@ public class UserService : IUserService
     public async Task CreateAsync(User userInput)
     {
         await _db.Users.AddAsync(userInput);
+        await _db.SaveChangesAsync();
     }
 
     public async Task UpdateByIdAsync(int id, User userInput)
@@ -42,6 +43,7 @@ public class UserService : IUserService
         user.Phone = userInput.Phone;
 
         _db.Users.Update(user);
+        await _db.SaveChangesAsync();
     }
 
     public async Task DeleteByIdAsync(int id)
@@ -50,5 +52,6 @@ public class UserService : IUserService
                    ?? throw new NotFoundException($"User with Id: {id} is not found");
 
         _db.Users.Remove(user);
+        await _db.SaveChangesAsync();
     }
 }
