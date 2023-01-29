@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Infrastructure;
 using MyBlog.Middlewares.ExceptionHandling;
+using MyBlog.Service.Areas.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<MyBlogContext>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 
