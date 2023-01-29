@@ -16,9 +16,9 @@ public class UserService : IUserService
 
     public async Task<List<User>> GetListAsync()
     {
-        var userList = await _context.Users.ToListAsync();
+        var users = await _context.Users.ToListAsync();
         
-        return userList;
+        return users;
     }
 
     public async Task<User> GetByIdAsync(int id)
