@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>MyBlog</RootNamespace>
+        <UserSecretsId>cc5dfcfc-fa16-4737-8c63-be8e773b3d88</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
