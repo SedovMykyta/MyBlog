@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using MyBlog.Service.Exception;
 
 namespace MyBlog.Middlewares.ExceptionHandling;
@@ -44,7 +43,7 @@ public class ExceptionHandlingMiddleware
         
         if (ex is CustomException customException)
         {
-            response.StatusCode = (int)customException.ResponseStatusCode;
+            response.StatusCode = (int)customException.StatusCode;
             errorDto.ErrorMessage = customException.Message;
         }
         else

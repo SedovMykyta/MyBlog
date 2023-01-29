@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace MyBlog.Middlewares.ExceptionHandling;
+﻿namespace MyBlog.Middlewares.ExceptionHandling;
 
 public class ErrorDto
 {

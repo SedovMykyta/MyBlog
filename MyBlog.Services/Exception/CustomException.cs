@@ -4,11 +4,11 @@ namespace MyBlog.Service.Exception;
 
 public abstract class CustomException : System.Exception
 {
-    public HttpStatusCode ResponseStatusCode { get; }
+    public HttpStatusCode StatusCode { get; }
 
-    protected CustomException(string message, HttpStatusCode responseStatusCode) 
+    protected CustomException(string message, HttpStatusCode statusCode) 
         : base(message)
     {
-        ResponseStatusCode = responseStatusCode;
+        StatusCode = statusCode;
     }
 }
