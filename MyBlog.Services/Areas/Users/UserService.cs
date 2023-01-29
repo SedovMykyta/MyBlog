@@ -7,33 +7,39 @@ namespace MyBlog.Service.Areas.Users;
 
 public class UserService : IUserService
 {
-    private readonly MyBlogContext _db;
+    private readonly MyBlogContext _context;
 
-    public UserService(MyBlogContext db)
+    public UserService(MyBlogContext context)
     {
-        _db = db;
+        _context = context;
     }
 
-    public async Task<List<User>> GetAllAsync()
+    public async Task<List<User>> GetListAsync()
     {
-        return await _db.Users.ToListAsync();
+        var userList = await _context.Users.ToListAsync();
+        
+        return userList;
     }
 
     public async Task<User> GetByIdAsync(int id)
     {
-        return await _db.Users.FirstOrDefaultAsync(u => u.Id == id)
-               ?? throw new NotFoundException($"User with Id: {id} is not found");
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id)
+                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+
+        return user;
     }
 
-    public async Task CreateAsync(User userInput)
+    public async Task<int> CreateAsync(User userInput)
     {
-        await _db.Users.AddAsync(userInput);
-        await _db.SaveChangesAsync();
-    }
+        await _context.Users.AddAsync(userInput);
+        await _context.SaveChangesAsync();
 
-    public async Task UpdateByIdAsync(int id, User userInput)
+        return userInput.Id; 
+    } 
+
+    public async Task<int> UpdateByIdAsync(int id, User userInput)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id) 
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
                    ?? throw new NotFoundException($"User with Id: {id} is not found");
         
         user.FirstName = userInput.FirstName;
@@ -42,16 +48,18 @@ public class UserService : IUserService
         user.Email = userInput.Email;
         user.Phone = userInput.Phone;
 
-        _db.Users.Update(user);
-        await _db.SaveChangesAsync();
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        return user.Id;
     }
 
     public async Task DeleteByIdAsync(int id)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id) 
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
                    ?? throw new NotFoundException($"User with Id: {id} is not found");
 
-        _db.Users.Remove(user);
-        await _db.SaveChangesAsync();
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
     }
 }

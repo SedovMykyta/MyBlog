@@ -4,13 +4,13 @@ namespace MyBlog.Service.Areas.Users;
 
 public interface IUserService
 {
-    Task<List<User>> GetAllAsync();
+    public Task<List<User>> GetListAsync();
 
-    Task<User> GetByIdAsync(int id);
+    public Task<User> GetByIdAsync(int id);
 
-    Task CreateAsync(User userInput);
+    public Task<int> CreateAsync(User userInput);
     
-    Task UpdateByIdAsync(int id, User userInput);
+    public Task<int> UpdateByIdAsync(int id, User userInput);
     
-    Task DeleteByIdAsync(int id);
+    public Task DeleteByIdAsync(int id);
 }
