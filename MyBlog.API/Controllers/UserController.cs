@@ -8,12 +8,12 @@ namespace MyBlog.Controllers;
 [ApiController]
 [Route("api/users")]
 [Produces(MediaTypeNames.Application.Json)]
-public class UserTestController : ControllerBase
+public class UserController : ControllerBase
 {
-    private readonly ILogger<UserTestController> _logger;
+    private readonly ILogger<UserController> _logger;
     private readonly IUserService _userService;
     
-    public UserTestController(ILogger<UserTestController> logger, IUserService userService)
+    public UserController(ILogger<UserController> logger, IUserService userService)
     {
         _logger = logger;
         _userService = userService;
@@ -49,42 +49,40 @@ public class UserTestController : ControllerBase
     
         return Ok(user);
     }
-    
+
     /// <summary>
-    /// Creates a User.
+    /// Create User
     /// </summary>
-    /// <param name="user">User object</param>
+    /// <param name="userInput">User object</param>
     /// <returns>Created User object</returns>
     /// <response code="200">Success</response>
     [HttpPost]
-    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateAsync([FromBody] User user)
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateAsync([FromBody] User userInput)
     {
-        var userId = await _userService.CreateAsync(user);
-
-        var userFromBd = await _userService.GetByIdAsync(userId);
+        var userId = await _userService.CreateAsync(userInput);
+        var user = await _userService.GetByIdAsync(userId);
         
-        return Ok(userFromBd);
+        return Ok(user);
     }
     
     /// <summary>
     /// Update User by id
     /// </summary>
     /// <param name="id">User id</param>
-    /// <param name="user">User object</param>
+    /// <param name="userInput">User object</param>
     /// <returns>Updated User object</returns>
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpPut ("{id:int}")]
-    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] User user)
+    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] User userInput)
     {
-        var userId = await _userService.UpdateByIdAsync(id, user);
+        var userId = await _userService.UpdateByIdAsync(id, userInput);
+        var user = await _userService.GetByIdAsync(userId);
         
-        var userFromBd = await _userService.GetByIdAsync(userId);
-        
-        return Ok(userFromBd);
+        return Ok(user);
     }
 
 
