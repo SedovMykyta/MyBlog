@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users;
 
 namespace MyBlog.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/users")]
+[Produces(MediaTypeNames.Application.Json)]
 public class UserTestController : ControllerBase
 {
     private readonly ILogger<UserTestController> _logger;
@@ -23,7 +25,7 @@ public class UserTestController : ControllerBase
     /// <returns>Returns User list</returns>
     /// <response code="200">Success</response>
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetListAsync()
     {
         var users = await _userService.GetListAsync();
@@ -38,10 +40,10 @@ public class UserTestController : ControllerBase
     /// <returns>Returns User</returns>
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
-    [HttpGet( "{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByIdAsync(int id)
+    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
         var user = await _userService.GetByIdAsync(id);
     
@@ -52,15 +54,17 @@ public class UserTestController : ControllerBase
     /// Creates a User.
     /// </summary>
     /// <param name="user">User object</param>
-    /// <returns>Id created user</returns>
+    /// <returns>Created User object</returns>
     /// <response code="200">Success</response>
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateAsync([FromBody] User user)
     {
-        var idUser = await _userService.CreateAsync(user);
+        var userId = await _userService.CreateAsync(user);
+
+        var userFromBd = await _userService.GetByIdAsync(userId);
         
-        return Ok(idUser);
+        return Ok(userFromBd);
     }
     
     /// <summary>
@@ -68,17 +72,19 @@ public class UserTestController : ControllerBase
     /// </summary>
     /// <param name="id">User id</param>
     /// <param name="user">User object</param>
-    /// <returns>Id updated user</returns>
+    /// <returns>Updated User object</returns>
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
-    [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpPut ("{id:int}")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync(int id, [FromBody] User user)
+    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] User user)
     {
-        var idUser = await _userService.UpdateByIdAsync(id, user);
+        var userId = await _userService.UpdateByIdAsync(id, user);
         
-        return Ok(idUser);
+        var userFromBd = await _userService.GetByIdAsync(userId);
+        
+        return Ok(userFromBd);
     }
 
 
@@ -91,7 +97,7 @@ public class UserTestController : ControllerBase
     [HttpDelete ("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteByIdAsync(int id)
+    public async Task<IActionResult> DeleteByIdAsync([FromRoute] int id)
     {
         await _userService.DeleteByIdAsync(id);
 
