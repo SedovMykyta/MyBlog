@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBlog.Infrastructure;
 using MyBlog.Middlewares.ExceptionHandling;
 using MyBlog.Service.Areas.Users;
+using MyBlog.Service.Areas.Users.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddAutoMapper(typeof(UserMappingProfile));
 
 builder.Services.AddSwaggerGen(config =>
 {
