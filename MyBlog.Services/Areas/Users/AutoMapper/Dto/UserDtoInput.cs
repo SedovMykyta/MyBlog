@@ -11,4 +11,6 @@ public class UserDtoInput
     public string Email { get; set; }
 
     public string Phone { get; set; }
+    
+    public DateTime DateCreateAccount { get; set; } = DateTime.Now;
 }

@@ -26,7 +26,7 @@ public class UserController : ControllerBase
     /// <returns>Returns User list</returns>
     /// <response code="200">Success</response>
     [HttpGet]
-    [ProducesResponseType(typeof(List<UserDtoGet>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetListAsync()
     {
         var users = await _userService.GetListAsync();
@@ -42,7 +42,7 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(UserDtoGet), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {

@@ -5,9 +5,9 @@ namespace MyBlog.Service.Areas.Users;
 
 public interface IUserService
 {
-    public Task<List<UserDtoGet>> GetListAsync();
+    public Task<List<UserDto>> GetListAsync();
 
-    public Task<UserDtoGet> GetByIdAsync(int id);
+    public Task<UserDto> GetByIdAsync(int id);
 
     public Task<int> CreateAsync(UserDtoInput userInput);
     
