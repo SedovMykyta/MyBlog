@@ -11,4 +11,12 @@
       <ProjectReference Include="..\MyBlog.Infrastructure\MyBlog.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Areas\Users\Mapper\Dto\UserDtoInput.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+    </ItemGroup>
+
 </Project>

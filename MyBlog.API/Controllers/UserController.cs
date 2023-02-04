@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users;
+using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 
 namespace MyBlog.Controllers;
 
@@ -25,7 +26,7 @@ public class UserController : ControllerBase
     /// <returns>Returns User list</returns>
     /// <response code="200">Success</response>
     [HttpGet]
-    [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetListAsync()
     {
         var users = await _userService.GetListAsync();
@@ -41,12 +42,12 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
         var user = await _userService.GetByIdAsync(id);
-    
+
         return Ok(user);
     }
 
@@ -58,7 +59,7 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     [HttpPost]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateAsync([FromBody] User userInput)
+    public async Task<IActionResult> CreateAsync([FromBody] UserDtoInput userInput)
     {
         var userId = await _userService.CreateAsync(userInput);
         var user = await _userService.GetByIdAsync(userId);
@@ -77,7 +78,7 @@ public class UserController : ControllerBase
     [HttpPut ("{id:int}")]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] User userInput)
+    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] UserDtoInput userInput)
     {
         var userId = await _userService.UpdateByIdAsync(id, userInput);
         var user = await _userService.GetByIdAsync(userId);
