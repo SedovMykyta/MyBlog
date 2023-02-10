@@ -18,7 +18,7 @@ public class User
 
     public Role Role { get; set; }
 
-    public DateTime DateCreateAccount { get; set; } = DateTime.Now;
+    public DateTime DateCreateAccount { get; set; } = DateTime.UtcNow;
 
     public List<Article> Articles { get; set; }
 }

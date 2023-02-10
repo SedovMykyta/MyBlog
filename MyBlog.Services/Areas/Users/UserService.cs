@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MyBlog.Infrastructure;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
@@ -52,7 +51,7 @@ public class UserService : IUserService
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id)
                    ?? throw new NotFoundException($"User with Id: {id} is not found");
-        
+
         _mapper.Map(userInput, user);
         
         _context.Users.Update(user);

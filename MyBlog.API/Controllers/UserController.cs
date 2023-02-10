@@ -13,7 +13,7 @@ public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> _logger;
     private readonly IUserService _userService;
-    
+
     public UserController(ILogger<UserController> logger, IUserService userService)
     {
         _logger = logger;
@@ -62,6 +62,7 @@ public class UserController : ControllerBase
     public async Task<IActionResult> CreateAsync([FromBody] UserDtoInput userInput)
     {
         var userId = await _userService.CreateAsync(userInput);
+
         var user = await _userService.GetByIdAsync(userId);
         
         return Ok(user);
