@@ -25,13 +25,11 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(
-                ex, httpContext);
+            await HandleExceptionAsync(ex, httpContext);
         }
     }
 
-    private async Task HandleExceptionAsync(
-        Exception ex, HttpContext context)
+    private async Task HandleExceptionAsync(Exception ex, HttpContext context)
     {
         _logger.LogError(ex.Message);
 
@@ -45,6 +43,7 @@ public class ExceptionHandlingMiddleware
         {
             response.StatusCode = (int)customException.StatusCode;
             errorDto.ErrorMessage = customException.Message;
+            errorDto.AdditionalInfo = customException.ResponseAdditionalInfo;
         }
         else
         {

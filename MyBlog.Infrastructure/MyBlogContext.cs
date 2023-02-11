@@ -7,9 +7,7 @@ public class MyBlogContext : DbContext
 {
     public MyBlogContext(DbContextOptions<MyBlogContext> options) : base(options)
     {
-        
     }
-    
 
     public DbSet<User> Users { get; set; }
     
