@@ -79,6 +79,7 @@ public class UserController : ControllerBase
     /// <returns>Created UserDto object</returns>
     /// <response code="200">Success</response>
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateAsync([FromBody] UserDtoInput userInput)
     {
@@ -98,7 +99,7 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpPut ("{id:int}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] UserDtoInput userInput)
