@@ -1,6 +1,6 @@
 ﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 
@@ -23,9 +23,10 @@ public class UserController : ControllerBase
     /// <summary>
     /// Get list of Users
     /// </summary>
-    /// <returns>Returns User list</returns>
+    /// <returns>Returns UserDto list</returns>
     /// <response code="200">Success</response>
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetListAsync()
     {
@@ -34,14 +35,34 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
+
+    /// <summary>
+    /// Get User by email
+    /// </summary>
+    /// <param name="email">User email</param>
+    /// <returns>Returns UserDto</returns>
+    /// <response code="200">Success</response>
+    /// <response code="404">UserNotFound</response>
+    [HttpGet("{email}")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
+    {
+        var user = await _userService.GetByEmailAsync(email);
+
+        return Ok(user);
+    }
+
     /// <summary>
     /// Get User by id
     /// </summary>
     /// <param name="id">User id</param>
-    /// <returns>Returns User</returns>
+    /// <returns>Returns UserDto</returns>
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpGet("{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
@@ -54,11 +75,11 @@ public class UserController : ControllerBase
     /// <summary>
     /// Create User
     /// </summary>
-    /// <param name="userInput">User object</param>
-    /// <returns>Created User object</returns>
+    /// <param name="userInput">UserDtoInput object</param>
+    /// <returns>Created UserDto object</returns>
     /// <response code="200">Success</response>
     [HttpPost]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateAsync([FromBody] UserDtoInput userInput)
     {
         var userId = await _userService.CreateAsync(userInput);
@@ -72,12 +93,13 @@ public class UserController : ControllerBase
     /// Update User by id
     /// </summary>
     /// <param name="id">User id</param>
-    /// <param name="userInput">User object</param>
-    /// <returns>Updated User object</returns>
+    /// <param name="userInput">UserDtoInput object</param>
+    /// <returns>Updated UserDto object</returns>
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpPut ("{id:int}")]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [Authorize]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] UserDtoInput userInput)
     {
@@ -95,6 +117,7 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpDelete ("{id:int}")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteByIdAsync([FromRoute] int id)

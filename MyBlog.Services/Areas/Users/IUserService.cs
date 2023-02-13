@@ -1,4 +1,5 @@
-﻿using MyBlog.Service.Areas.Users.AutoMapper.Dto;
+﻿using MyBlog.Infrastructure.Entities;
+using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 
 namespace MyBlog.Service.Areas.Users;
 
@@ -7,6 +8,8 @@ public interface IUserService
     public Task<List<UserDto>> GetListAsync();
 
     public Task<UserDto> GetByIdAsync(int id);
+    
+    public Task<User> GetByEmailAsync(string email);
 
     public Task<int> CreateAsync(UserDtoInput userInput);
     
