@@ -11,9 +11,9 @@ public interface IUserService
     
     public Task<User> GetByEmailAsync(string email);
 
-    public Task<int> CreateAsync(UserDtoInput userInput);
+    public Task<UserDto> CreateAsync(UserDtoInput userInput);
     
-    public Task<int> UpdateByIdAsync(int id, UserDtoInput userInput);
+    public Task<UserDto> UpdateByIdAsync(int id, UserDtoInput userInput);
     
     public Task DeleteByIdAsync(int id);
 }

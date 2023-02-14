@@ -49,9 +49,9 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
     {
-        var user = await _userService.GetByEmailAsync(email);
+        var userDto = await _userService.GetByEmailAsync(email);
 
-        return Ok(user);
+        return Ok(userDto);
     }
 
     /// <summary>
@@ -67,9 +67,9 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
-        var user = await _userService.GetByIdAsync(id);
+        var userDto = await _userService.GetByIdAsync(id);
 
-        return Ok(user);
+        return Ok(userDto);
     }
 
     /// <summary>
@@ -83,11 +83,9 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateAsync([FromBody] UserDtoInput userInput)
     {
-        var userId = await _userService.CreateAsync(userInput);
+        var userDto = await _userService.CreateAsync(userInput);
 
-        var user = await _userService.GetByIdAsync(userId);
-        
-        return Ok(user);
+        return Ok(userDto);
     }
     
     /// <summary>
@@ -104,10 +102,9 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] UserDtoInput userInput)
     {
-        var userId = await _userService.UpdateByIdAsync(id, userInput);
-        var user = await _userService.GetByIdAsync(userId);
-        
-        return Ok(user);
+        var userDto = await _userService.UpdateByIdAsync(id, userInput);
+
+        return Ok(userDto);
     }
 
 

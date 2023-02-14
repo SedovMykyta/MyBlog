@@ -30,15 +30,15 @@ public class AuthService : IAuthService
     {
         var user = AuthenticateAsync(userLogin);
 
-        var token = GenerateJwtTokenAsync(await user);
+        var token = GenerateJwtToken(await user);
         
-        return await token;
+        return token;
     }
 
     private async Task<User> AuthenticateAsync(UserDtoLogin userLogin)
     {
         var user = await _userService.GetByEmailAsync(userLogin.Email);
-
+        
         if (userLogin.Password != user.Password)
         {
             throw new BadRequestException("You entering wrong password");
@@ -47,7 +47,7 @@ public class AuthService : IAuthService
         return user;
     }
 
-    private async Task<string> GenerateJwtTokenAsync(User user)
+    private string GenerateJwtToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

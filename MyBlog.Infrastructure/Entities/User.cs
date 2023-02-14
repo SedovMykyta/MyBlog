@@ -20,5 +20,5 @@ public class User
 
     public DateTime DateCreateAccount { get; set; } = DateTime.UtcNow;
 
-    public List<Article> Articles { get; set; }
+    public List<Article>? Articles { get; set; }
 }

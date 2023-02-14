@@ -29,8 +29,7 @@ public class UserService : IUserService
 
     public async Task<UserDto> GetByIdAsync(int id)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+        var user = await GetUserByIdAsync(id);
         
         var userDto = _mapper.Map<UserDto>(user);
         
@@ -39,13 +38,12 @@ public class UserService : IUserService
 
     public async Task<User> GetByEmailAsync(string email)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email)
-                   ?? throw new NotFoundException($"User with Email: {email} is not fount");
-        
+        var user = await GetUserByEmailAsync(email);
+
         return user;
     }
 
-    public async Task<int> CreateAsync(UserDtoInput userInput)
+    public async Task<UserDto> CreateAsync(UserDtoInput userInput)
     {
         if (_context.Users.Any(u => u.Email == userInput.Email || u.Phone == userInput.Phone))
         {
@@ -57,15 +55,16 @@ public class UserService : IUserService
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
         
-        return user.Id;
+        var userDto = _mapper.Map<UserDto>(user);
+        
+        return userDto;
     } 
 
-    public async Task<int> UpdateByIdAsync(int id, UserDtoInput userInput)
+    public async Task<UserDto> UpdateByIdAsync(int id, UserDtoInput userInput)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id)
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+        var user = await GetUserByIdAsync(id);
 
-        if (CheckForFreeAsync(id, userInput).Result == false)
+        if (await CheckEmailAndPhoneForFreeAsync(id, userInput) == false)
         {
             throw new ExistsException($"User with Email: {userInput.Email} or phone: {userInput.Phone} exists");
         }
@@ -75,21 +74,38 @@ public class UserService : IUserService
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
 
-        return user.Id;
+        var userDto = _mapper.Map<UserDto>(user);
+        
+        return userDto;
     }
 
     public async Task DeleteByIdAsync(int id)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+        var user = await GetUserByIdAsync(id);
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
     }
-    
-    private async Task<bool> CheckForFreeAsync(int id, UserDtoInput userInput)
+
+    private async Task<User> GetUserByIdAsync(int id)
     {
-        var user = _context.Users.FirstOrDefault(u => u.Id == id)!;
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
+                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+
+        return user;
+    }
+
+    private async Task<User> GetUserByEmailAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email)
+                   ?? throw new NotFoundException($"User with Email: {email} is not fount");
+
+        return user;
+    }
+    
+    private async Task<bool> CheckEmailAndPhoneForFreeAsync(int id, UserDtoInput userInput)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
         var repeatUserEmail = user.Email == userInput.Email;
         var repeatUserPhone = user.Phone == userInput.Phone;
