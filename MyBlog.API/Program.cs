@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +21,12 @@ builder.Services.AddControllers(config => config.Filters.Add<ValidationFilter>()
 
 builder.Services.AddDbContext<MyBlogContext>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyBlogDatabase")));
-    
+
+builder.Services.AddValidatorsFromAssemblyContaining<UserDtoInputValidator>();
 builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true)
-    .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<UserDtoInputValidator>());
-    
+    .AddFluentValidationAutoValidation(); 
+builder.Services.AddFluentValidationClientsideAdapters(); 
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<IUserService, UserService>();
