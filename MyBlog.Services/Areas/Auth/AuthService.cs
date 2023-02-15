@@ -28,9 +28,9 @@ public class AuthService : IAuthService
 
     public async Task<string> LoginAsync(UserDtoLogin userLogin)
     {
-        var user = AuthenticateAsync(userLogin);
+        var user = await AuthenticateAsync(userLogin);
 
-        var token = GenerateJwtToken(await user);
+        var token = GenerateJwtToken(user);
         
         return token;
     }
@@ -38,7 +38,6 @@ public class AuthService : IAuthService
     private async Task<User> AuthenticateAsync(UserDtoLogin userLogin)
     {
         var user = await _userService.GetByEmailAsync(userLogin.Email);
-        
         if (userLogin.Password != user.Password)
         {
             throw new BadRequestException("You entering wrong password");
@@ -62,7 +61,8 @@ public class AuthService : IAuthService
             new Claim(ClaimTypes.Role, user.Role.ToString()),
         };
 
-        var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+        var token = new JwtSecurityToken(
+            _config["Jwt:Issuer"],
             _config["Jwt:Audience"],
             claims,
             expires: DateTime.Now.AddMinutes(15),

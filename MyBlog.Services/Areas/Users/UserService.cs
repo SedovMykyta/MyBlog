@@ -21,7 +21,7 @@ public class UserService : IUserService
     public async Task<List<UserDto>> GetListAsync()
     {
         var users = await _context.Users
-            .Select(u => _mapper.Map<UserDto>(u))
+            .Select(user => _mapper.Map<UserDto>(user))
             .ToListAsync();
         
         return users;
@@ -47,7 +47,7 @@ public class UserService : IUserService
     {
         if (_context.Users.Any(u => u.Email == userInput.Email || u.Phone == userInput.Phone))
         {
-            throw new ExistsException($"User with Email: {userInput.Email} or phone: {userInput.Phone} exists");
+            throw new BadRequestException($"User with this email or phone exists");
         }
         
         var user = _mapper.Map<User>(userInput);
@@ -64,9 +64,10 @@ public class UserService : IUserService
     {
         var user = await GetUserByIdAsync(id);
 
-        if (await CheckEmailAndPhoneForFreeAsync(id, userInput) == false)
+        var freeEmailAndPhone = await CheckEmailAndPhoneForFreeAsync(id, userInput);
+        if (freeEmailAndPhone == false)
         {
-            throw new ExistsException($"User with Email: {userInput.Email} or phone: {userInput.Phone} exists");
+            throw new BadRequestException($"User with this email or phone exists");
         }
         
         _mapper.Map(userInput, user);
@@ -89,7 +90,7 @@ public class UserService : IUserService
 
     private async Task<User> GetUserByIdAsync(int id)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id) 
                    ?? throw new NotFoundException($"User with Id: {id} is not found");
 
         return user;
@@ -97,7 +98,7 @@ public class UserService : IUserService
 
     private async Task<User> GetUserByEmailAsync(string email)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email)
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == email)
                    ?? throw new NotFoundException($"User with Email: {email} is not fount");
 
         return user;
@@ -105,10 +106,10 @@ public class UserService : IUserService
     
     private async Task<bool> CheckEmailAndPhoneForFreeAsync(int id, UserDtoInput userInput)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
 
-        var repeatUserEmail = user.Email == userInput.Email;
-        var repeatUserPhone = user.Phone == userInput.Phone;
+        bool repeatUserEmail = user.Email == userInput.Email;
+        bool repeatUserPhone = user.Phone == userInput.Phone;
 
         if (repeatUserEmail && repeatUserPhone)
         {
@@ -117,7 +118,7 @@ public class UserService : IUserService
         
         if (repeatUserEmail == false && repeatUserPhone == false)
         {
-            if (_context.Users.Any(u => u.Email == userInput.Email || u.Phone == userInput.Phone))
+            if (_context.Users.Any(user => user.Email == userInput.Email || user.Phone == userInput.Phone))
             {
                 return false;
             }
@@ -125,7 +126,7 @@ public class UserService : IUserService
         
         if (repeatUserEmail)
         {
-            if (_context.Users.Any(u => u.Phone == userInput.Phone))
+            if (_context.Users.Any(user => user.Phone == userInput.Phone))
             {
                 return false;
             }
@@ -133,7 +134,7 @@ public class UserService : IUserService
         
         if (repeatUserPhone)
         {
-            if (_context.Users.Any(u => u.Email == userInput.Email))
+            if (_context.Users.Any(user => user.Email == userInput.Email))
             {
                 return false;
             }

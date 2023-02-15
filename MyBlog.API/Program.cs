@@ -50,7 +50,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-            
         };
     });
 
@@ -60,7 +59,7 @@ builder.Services.AddSwaggerGen(config =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     config.IncludeXmlComments(xmlPath);
     
-    config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Scheme = "Bearer",
         BearerFormat = "JWT",

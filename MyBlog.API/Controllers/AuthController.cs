@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.Service.Areas.Auth;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 
@@ -6,6 +7,7 @@ namespace MyBlog.Controllers;
 
 [Route("api/auth")]
 [ApiController]
+[Produces(MediaTypeNames.Application.Json)]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;   
