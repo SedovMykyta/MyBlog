@@ -32,7 +32,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
-builder.Services.AddTransient<IEncryptDecryptManager, EncryptDecryptManager>();
+builder.Services.AddTransient<IPasswordManager, PasswordManager>();
 
 builder.Services.AddAutoMapper(typeof(UserMappingProfile));
 

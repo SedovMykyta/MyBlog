@@ -1,6 +1,6 @@
 ﻿namespace MyBlog.Service.Helpers.EncryptDecrypt;
 
-public interface IEncryptDecryptManager
+public interface IPasswordManager
 {
     public string Encrypt(string text);
 

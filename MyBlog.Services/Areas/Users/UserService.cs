@@ -12,13 +12,13 @@ public class UserService : IUserService
 {
     private readonly MyBlogContext _context;
     private readonly IMapper _mapper;
-    private readonly IEncryptDecryptManager _encryptDecrypt;
+    private readonly IPasswordManager _password;
     
-    public UserService(MyBlogContext context, IMapper mapper, IEncryptDecryptManager encryptDecrypt)
+    public UserService(MyBlogContext context, IMapper mapper, IPasswordManager password)
     {
         _context = context;
         _mapper = mapper;
-        _encryptDecrypt = encryptDecrypt;
+        _password = password;
     }
 
     public async Task<List<UserDto>> GetListAsync()
@@ -53,7 +53,7 @@ public class UserService : IUserService
             throw new BadRequestException($"User with this email or phone exists");
         }
 
-        userInput.Password = _encryptDecrypt.Encrypt(userInput.Password);
+        userInput.Password = _password.Encrypt(userInput.Password);
         
         var user = _mapper.Map<User>(userInput);
         
@@ -75,7 +75,7 @@ public class UserService : IUserService
             throw new BadRequestException($"User with this email or phone exists");
         }
         
-        userInput.Password = _encryptDecrypt.Encrypt(userInput.Password);
+        userInput.Password = _password.Encrypt(userInput.Password);
         
         _mapper.Map(userInput, user);
         

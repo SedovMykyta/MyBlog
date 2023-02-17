@@ -4,24 +4,24 @@ using Microsoft.Extensions.Configuration;
 
 namespace MyBlog.Service.Helpers.EncryptDecrypt;
 
-public class EncryptDecryptManager: IEncryptDecryptManager
+public class PasswordManager: IPasswordManager
 {
     private readonly string? _key;
     
-    public EncryptDecryptManager(IConfiguration config)
+    public PasswordManager(IConfiguration config)
     {
         _key = config["PasswordKey:Key"];
     }
     
     public string Encrypt(string text)
     {
-        byte[] aesIv = new byte[16];
+        byte[] aesInitializationVector = new byte[16];
         byte[] array;
 
         using (var aesImplementation = Aes.Create())
         {
             aesImplementation.Key = Encoding.UTF8.GetBytes(_key);
-            aesImplementation.IV = aesIv;
+            aesImplementation.IV = aesInitializationVector;
             var encryptor = aesImplementation.CreateEncryptor(aesImplementation.Key, aesImplementation.IV);
             using (var memoryStream = new MemoryStream())
             {
@@ -42,12 +42,12 @@ public class EncryptDecryptManager: IEncryptDecryptManager
 
     public string Decrypt(string text)
     {
-        byte[] aesIv = new byte[16];
+        byte[] aesInitializationVector = new byte[16];
         byte[] buffer = Convert.FromBase64String(text);
         
         using var aesImplementation = Aes.Create();
         aesImplementation.Key = Encoding.UTF8.GetBytes(_key);
-        aesImplementation.IV = aesIv;
+        aesImplementation.IV = aesInitializationVector;
         
         var decryptor = aesImplementation.CreateDecryptor(aesImplementation.Key, aesImplementation.IV);
         
