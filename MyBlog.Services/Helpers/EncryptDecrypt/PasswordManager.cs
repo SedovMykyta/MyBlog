@@ -15,13 +15,13 @@ public class PasswordManager: IPasswordManager
     
     public string Encrypt(string text)
     {
-        byte[] aesInitializationVector = new byte[16];
+        byte[] advancedEncryptionStandardInitializationVector = new byte[16];
         byte[] array;
 
         using (var aesImplementation = Aes.Create())
         {
             aesImplementation.Key = Encoding.UTF8.GetBytes(_key);
-            aesImplementation.IV = aesInitializationVector;
+            aesImplementation.IV = advancedEncryptionStandardInitializationVector;
             var encryptor = aesImplementation.CreateEncryptor(aesImplementation.Key, aesImplementation.IV);
             using (var memoryStream = new MemoryStream())
             {
@@ -42,12 +42,12 @@ public class PasswordManager: IPasswordManager
 
     public string Decrypt(string text)
     {
-        byte[] aesInitializationVector = new byte[16];
+        byte[] advancedEncryptionStandardInitializationVector = new byte[16];
         byte[] buffer = Convert.FromBase64String(text);
         
         using var aesImplementation = Aes.Create();
         aesImplementation.Key = Encoding.UTF8.GetBytes(_key);
-        aesImplementation.IV = aesInitializationVector;
+        aesImplementation.IV = advancedEncryptionStandardInitializationVector;
         
         var decryptor = aesImplementation.CreateDecryptor(aesImplementation.Key, aesImplementation.IV);
         

@@ -15,12 +15,12 @@ public class AuthService : IAuthService
 {
     private readonly IUserService _userService;
     private readonly IConfiguration _config;
-    private readonly IPasswordManager _password;
-    public AuthService(IUserService userService, IConfiguration config, IPasswordManager password)
+    private readonly IPasswordManager _passwordManager;
+    public AuthService(IUserService userService, IConfiguration config, IPasswordManager passwordManager)
     {
         _userService = userService;
         _config = config;
-        _password = password;
+        _passwordManager = passwordManager;
     }
 
     public async Task RegisterAsync(UserDtoInput userInput)
@@ -40,7 +40,7 @@ public class AuthService : IAuthService
     private async Task<User> AuthenticateAsync(UserDtoLogin userLogin)
     {
         var user = await _userService.GetByEmailAsync(userLogin.Email);
-        if (userLogin.Password != _password.Decrypt(user.Password))
+        if (userLogin.Password != _passwordManager.Decrypt(user.Password))
         {
             throw new BadRequestException("You entering wrong password");
         }

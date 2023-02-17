@@ -1,0 +1,34 @@
+ .gitignore                                         |   5 [32m+[m
+ MyBlog.API/Attrivutes/ValidateModelAttribute.cs    |  20 [32m++++[m
+ MyBlog.API/Controllers/UserController.cs           | 114 [32m+++++++++++++++++++++[m
+ .../Middlewares/ExceptionHandling/ErrorDto.cs      |   6 [32m++[m
+ .../ExceptionHandlingMiddleware.cs                 |  56 [32m++++++++++[m
+ MyBlog.API/MyBlog.API.csproj                       |  36 [32m+++++++[m
+ MyBlog.API/Program.cs                              |  54 [32m++++++++++[m
+ MyBlog.API/Properties/launchSettings.json          |  41 [32m++++++++[m
+ MyBlog.API/appsettings.Development.json            |   8 [32m++[m
+ MyBlog.API/appsettings.json                        |  12 [32m+++[m
+ MyBlog.Infrastructure/Entities/Article.cs          |  14 [32m+++[m
+ MyBlog.Infrastructure/Entities/Enum/Role.cs        |   7 [32m++[m
+ MyBlog.Infrastructure/Entities/User.cs             |  24 [32m+++++[m
+ .../Migrations/20230128180425_Initial.Designer.cs  | 112 [32m++++++++++++++++++++[m
+ .../Migrations/20230128180425_Initial.cs           |  71 [32m+++++++++++++[m
+ ...15_Few changes in existing entities.Designer.cs | 113 [32m++++++++++++++++++++[m
+ ...30128192915_Few changes in existing entities.cs |  59 [32m+++++++++++[m
+ .../ApplicationDbContextModelSnapshot.cs           | 110 [32m++++++++++++++++++++[m
+ MyBlog.Infrastructure/MyBlog.Infrastructure.csproj |  15 [32m+++[m
+ MyBlog.Infrastructure/MyBlogContext.cs             |  19 [32m++++[m
+ .../Areas/Users/AutoMapper/Dto/UserDto.cs          |  16 [32m+++[m
+ .../Areas/Users/AutoMapper/Dto/UserDtoInput.cs     |  16 [32m+++[m
+ .../Areas/Users/AutoMapper/UserMappingProfile.cs   |  14 [32m+++[m
+ MyBlog.Services/Areas/Users/IUserService.cs        |  17 [32m+++[m
+ MyBlog.Services/Areas/Users/UserService.cs         |  74 [32m+++++++++++++[m
+ .../Areas/Users/Validators/IValidator.cs           |   6 [32m++[m
+ .../Users/Validators/UserDtoInputValidator.cs      |  31 [32m++++++[m
+ MyBlog.Services/Exception/CustomException.cs       |  13 [32m+++[m
+ MyBlog.Services/Exception/NotFoundException.cs     |  12 [32m+++[m
+ .../Exception/ValidateErrorException.cs            |  14 [32m+++[m
+ MyBlog.Services/MyBlog.Services.csproj             |  23 [32m+++++[m
+ MyBlog.sln                                         |  28 [32m+++++[m
+ readme.md                                          |   1 [32m+[m
+ 33 files changed, 1161 insertions(+)
