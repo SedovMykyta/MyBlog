@@ -7,6 +7,7 @@ using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 using MyBlog.Service.Exception;
+using MyBlog.Service.Helpers.EncryptDecrypt;
 
 namespace MyBlog.Service.Areas.Auth;
 
@@ -14,11 +15,12 @@ public class AuthService : IAuthService
 {
     private readonly IUserService _userService;
     private readonly IConfiguration _config;
-    
-    public AuthService(IUserService userService, IConfiguration config)
+    private readonly IEncryptDecryptManager _encryptDecrypt;
+    public AuthService(IUserService userService, IConfiguration config, IEncryptDecryptManager encryptDecrypt)
     {
         _userService = userService;
         _config = config;
+        _encryptDecrypt = encryptDecrypt;
     }
 
     public async Task RegisterAsync(UserDtoInput userInput)
@@ -38,7 +40,7 @@ public class AuthService : IAuthService
     private async Task<User> AuthenticateAsync(UserDtoLogin userLogin)
     {
         var user = await _userService.GetByEmailAsync(userLogin.Email);
-        if (userLogin.Password != user.Password)
+        if (userLogin.Password != _encryptDecrypt.Decrypt(user.Password))
         {
             throw new BadRequestException("You entering wrong password");
         }

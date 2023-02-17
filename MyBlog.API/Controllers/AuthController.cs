@@ -11,9 +11,9 @@ namespace MyBlog.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;   
-    private readonly ILogger<UserController> _logger;  
+    private readonly ILogger<AuthController> _logger;  
     
-    public AuthController(ILogger<UserController> logger, IAuthService authService)
+    public AuthController(ILogger<AuthController> logger, IAuthService authService)
     {
         _logger = logger;
         _authService = authService;
