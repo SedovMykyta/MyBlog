@@ -21,7 +21,7 @@ public class UserService : IUserService
     public async Task<List<UserDto>> GetListAsync()
     {
         var users = await _context.Users
-            .Select(u => _mapper.Map<UserDto>(u))
+            .Select(user => _mapper.Map<UserDto>(user))
             .ToListAsync();
         
         return users;
@@ -29,43 +29,117 @@ public class UserService : IUserService
 
     public async Task<UserDto> GetByIdAsync(int id)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+        var user = await GetUserByIdAsync(id);
         
         var userDto = _mapper.Map<UserDto>(user);
         
         return userDto;
     }
 
-    public async Task<int> CreateAsync(UserDtoInput userInput)
+    public async Task<User> GetByEmailAsync(string email)
     {
+        var user = await GetUserByEmailAsync(email);
+
+        return user;
+    }
+
+    public async Task<UserDto> CreateAsync(UserDtoInput userInput)
+    {
+        if (_context.Users.Any(user => user.Email == userInput.Email || user.Phone == userInput.Phone))
+        {
+            throw new BadRequestException($"User with this email or phone exists");
+        }
+        
         var user = _mapper.Map<User>(userInput);
         
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
         
-        return user.Id;
+        var userDto = _mapper.Map<UserDto>(user);
+        
+        return userDto;
     } 
 
-    public async Task<int> UpdateByIdAsync(int id, UserDtoInput userInput)
+    public async Task<UserDto> UpdateByIdAsync(int id, UserDtoInput userInput)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id)
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+        var user = await GetUserByIdAsync(id);
 
+        var isEmailAndPhoneAreFree = await CheckEmailAndPhoneAreFreeAsync(id, userInput);
+        if (! isEmailAndPhoneAreFree)
+        {
+            throw new BadRequestException($"User with this email or phone exists");
+        }
+        
         _mapper.Map(userInput, user);
         
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
 
-        return user.Id;
+        var userDto = _mapper.Map<UserDto>(user);
+        
+        return userDto;
     }
 
     public async Task DeleteByIdAsync(int id)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) 
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+        var user = await GetUserByIdAsync(id);
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
+    }
+
+    private async Task<User> GetUserByIdAsync(int id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id) 
+                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+
+        return user;
+    }
+
+    private async Task<User> GetUserByEmailAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == email)
+                   ?? throw new NotFoundException($"User with Email: {email} is not found");
+
+        return user;
+    }
+    
+    private async Task<bool> CheckEmailAndPhoneAreFreeAsync(int id, UserDtoInput userInput)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+
+        bool isUserEmailRepeat = user.Email == userInput.Email;
+        bool isUserPhoneRepeat = user.Phone == userInput.Phone;
+
+        if (isUserEmailRepeat && isUserPhoneRepeat)
+        {
+            return true;
+        }
+        
+        if (! isUserEmailRepeat && ! isUserPhoneRepeat)
+        {
+            if (_context.Users.Any(user => user.Email == userInput.Email || user.Phone == userInput.Phone))
+            {
+                return false;
+            }
+        }
+        
+        if (isUserEmailRepeat)
+        {
+            if (_context.Users.Any(user => user.Phone == userInput.Phone))
+            {
+                return false;
+            }
+        }
+        
+        if (isUserPhoneRepeat)
+        {
+            if (_context.Users.Any(user => user.Email == userInput.Email))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
