@@ -31,11 +31,12 @@ public class EncryptDecryptManager: IEncryptDecryptManager
                     {
                         streamWriter.Write(text);
                     }
-
+        
                     array = ms.ToArray();
                 }
             }
         }
+        
         return Convert.ToBase64String(array);
     }
 
@@ -43,22 +44,17 @@ public class EncryptDecryptManager: IEncryptDecryptManager
     {
         byte[] iv = new byte[16];
         byte[] buffer = Convert.FromBase64String(text);
-
-        using (var aes = Aes.Create())
-        {
-            aes.Key = Encoding.UTF8.GetBytes(_key);
-            aes.IV = iv;
-            var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-            using (var ms = new MemoryStream(buffer))
-            {
-                using (var cryptoStream = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-                {
-                    using (var sr = new StreamReader(cryptoStream))
-                    {
-                        return sr.ReadToEnd();
-                    }
-                }
-            }
-        }
+        
+        using var aes = Aes.Create();
+        aes.Key = Encoding.UTF8.GetBytes(_key);
+        aes.IV = iv;
+        
+        var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+        
+        using var ms = new MemoryStream(buffer);
+        using var cryptoStream = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
+        using var sr = new StreamReader(cryptoStream);
+        
+        return sr.ReadToEnd();
     }
 }
