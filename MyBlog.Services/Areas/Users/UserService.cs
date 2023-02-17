@@ -45,7 +45,7 @@ public class UserService : IUserService
 
     public async Task<UserDto> CreateAsync(UserDtoInput userInput)
     {
-        if (_context.Users.Any(u => u.Email == userInput.Email || u.Phone == userInput.Phone))
+        if (_context.Users.Any(user => user.Email == userInput.Email || user.Phone == userInput.Phone))
         {
             throw new BadRequestException($"User with this email or phone exists");
         }
@@ -64,8 +64,8 @@ public class UserService : IUserService
     {
         var user = await GetUserByIdAsync(id);
 
-        var freeEmailAndPhone = await CheckEmailAndPhoneForFreeAsync(id, userInput);
-        if (freeEmailAndPhone == false)
+        var isEmailAndPhoneAreFree = await CheckEmailAndPhoneAreFreeAsync(id, userInput);
+        if (! isEmailAndPhoneAreFree)
         {
             throw new BadRequestException($"User with this email or phone exists");
         }
@@ -99,24 +99,24 @@ public class UserService : IUserService
     private async Task<User> GetUserByEmailAsync(string email)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == email)
-                   ?? throw new NotFoundException($"User with Email: {email} is not fount");
+                   ?? throw new NotFoundException($"User with Email: {email} is not found");
 
         return user;
     }
     
-    private async Task<bool> CheckEmailAndPhoneForFreeAsync(int id, UserDtoInput userInput)
+    private async Task<bool> CheckEmailAndPhoneAreFreeAsync(int id, UserDtoInput userInput)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
 
-        bool repeatUserEmail = user.Email == userInput.Email;
-        bool repeatUserPhone = user.Phone == userInput.Phone;
+        bool isUserEmailRepeat = user.Email == userInput.Email;
+        bool isUserPhoneRepeat = user.Phone == userInput.Phone;
 
-        if (repeatUserEmail && repeatUserPhone)
+        if (isUserEmailRepeat && isUserPhoneRepeat)
         {
             return true;
         }
         
-        if (repeatUserEmail == false && repeatUserPhone == false)
+        if (! isUserEmailRepeat && ! isUserPhoneRepeat)
         {
             if (_context.Users.Any(user => user.Email == userInput.Email || user.Phone == userInput.Phone))
             {
@@ -124,7 +124,7 @@ public class UserService : IUserService
             }
         }
         
-        if (repeatUserEmail)
+        if (isUserEmailRepeat)
         {
             if (_context.Users.Any(user => user.Phone == userInput.Phone))
             {
@@ -132,7 +132,7 @@ public class UserService : IUserService
             }
         }
         
-        if (repeatUserPhone)
+        if (isUserPhoneRepeat)
         {
             if (_context.Users.Any(user => user.Email == userInput.Email))
             {
