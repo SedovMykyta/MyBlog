@@ -16,6 +16,7 @@ public class AuthService : IAuthService
     private readonly IUserService _userService;
     private readonly IConfiguration _config;
     private readonly IPasswordManager _passwordManager;
+    
     public AuthService(IUserService userService, IConfiguration config, IPasswordManager passwordManager)
     {
         _userService = userService;
