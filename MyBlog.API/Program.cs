@@ -14,6 +14,7 @@ using MyBlog.Service.Areas.Auth;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper;
 using MyBlog.Service.Areas.Users.Validators;
+using MyBlog.Service.Helpers.PasswordManagers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
-
+builder.Services.AddTransient<IPasswordManager, PasswordManager>();
 builder.Services.AddAutoMapper(typeof(UserMappingProfile));
 
 builder.Services.AddSingleton<UserDtoInputValidator>();

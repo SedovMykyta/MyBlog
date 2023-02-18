@@ -4,6 +4,7 @@ using MyBlog.Infrastructure;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 using MyBlog.Service.Exception;
+using MyBlog.Service.Helpers.PasswordManagers;
 
 namespace MyBlog.Service.Areas.Users;
 
@@ -11,11 +12,13 @@ public class UserService : IUserService
 {
     private readonly MyBlogContext _context;
     private readonly IMapper _mapper;
+    private readonly IPasswordManager _passwordManager;
     
-    public UserService(MyBlogContext context, IMapper mapper)
+    public UserService(MyBlogContext context, IMapper mapper, IPasswordManager passwordManager)
     {
         _context = context;
         _mapper = mapper;
+        _passwordManager = passwordManager;
     }
 
     public async Task<List<UserDto>> GetListAsync()
@@ -49,6 +52,8 @@ public class UserService : IUserService
         {
             throw new BadRequestException($"User with this email or phone exists");
         }
+
+        userInput.Password = _passwordManager.Encrypt(userInput.Password);
         
         var user = _mapper.Map<User>(userInput);
         
@@ -69,6 +74,8 @@ public class UserService : IUserService
         {
             throw new BadRequestException($"User with this email or phone exists");
         }
+        
+        userInput.Password = _passwordManager.Encrypt(userInput.Password);
         
         _mapper.Map(userInput, user);
         
