@@ -10,6 +10,8 @@ using Microsoft.OpenApi.Models;
 using MyBlog.Filtres;
 using MyBlog.Infrastructure;
 using MyBlog.Middlewares.ExceptionHandling;
+using MyBlog.Service.Areas.Articles;
+using MyBlog.Service.Areas.Articles.AutoMapper;
 using MyBlog.Service.Areas.Auth;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper;
@@ -33,7 +35,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IPasswordManager, PasswordManager>();
-builder.Services.AddAutoMapper(typeof(UserMappingProfile));
+builder.Services.AddTransient<IArticleService, ArticleService>();
+
+builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile));
 
 builder.Services.AddSingleton<UserDtoInputValidator>();
 

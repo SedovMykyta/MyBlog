@@ -1,4 +1,6 @@
-﻿namespace MyBlog.Infrastructure.Entities;
+﻿using MyBlog.Infrastructure.Entities.Enum;
+
+namespace MyBlog.Infrastructure.Entities;
 
 public class Article
 {
@@ -11,4 +13,10 @@ public class Article
     public string Description { get; set; }
 
     public string FullText { get; set; }
+    
+    public DateTime DateCreateArticle { get; set; } = DateTime.UtcNow;
+
+    public DateTime DateLastChangedArticle { get; set; } = DateTime.UtcNow;
+    
+    public Topic Topic { get; set; }
 }
