@@ -14,9 +14,9 @@ public interface IArticleService
     
     public Task<List<ArticleDto>> GetByTopicAsync(Topic topic);
 
-    public Task<ArticleDto> CreateAsync(JWTInfo userJwtInfo, ArticleDtoInput articleInput);
+    public Task<ArticleDto> CreateAsync(JWTInfo userToken, ArticleDtoInput articleInput);
     
-    public Task<ArticleDto> UpdateByIdAsync(int id, JWTInfo userJwtInfo, ArticleDtoInput articleInput);
+    public Task<ArticleDto> UpdateByIdAsync(int id, JWTInfo userToken, ArticleDtoInput articleInput);
 
-    public Task DeleteByIdAsync(int id, JWTInfo userJwtInfo);
+    public Task DeleteByIdAsync(int id, JWTInfo userToken);
 }

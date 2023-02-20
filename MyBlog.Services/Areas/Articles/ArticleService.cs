@@ -63,7 +63,7 @@ public class ArticleService : IArticleService
         return articleDto;
     }
     
-    public async Task<ArticleDto> CreateAsync(JWTInfo userJwtInfo, ArticleDtoInput articleInput)
+    public async Task<ArticleDto> CreateAsync(JWTInfo userToken, ArticleDtoInput articleInput)
     {
         if (await _context.Articles.AnyAsync(article => article.Title == articleInput.Title))
         {
@@ -72,7 +72,7 @@ public class ArticleService : IArticleService
         
         var article = _mapper.Map<Article>(articleInput);
 
-        article.UserId = userJwtInfo.Id;
+        article.UserId = userToken.Id;
         
         await _context.Articles.AddAsync(article);
         await _context.SaveChangesAsync();
@@ -82,7 +82,7 @@ public class ArticleService : IArticleService
         return articleDto;
     }
     
-    public async Task<ArticleDto> UpdateByIdAsync(int id, JWTInfo userJwtInfo, ArticleDtoInput articleInput)
+    public async Task<ArticleDto> UpdateByIdAsync(int id, JWTInfo userToken, ArticleDtoInput articleInput)
     {
         var article = await GetArticleByIdAsync(id);
         
@@ -91,14 +91,14 @@ public class ArticleService : IArticleService
             throw new BadRequestException($"Article with Title: {articleInput.Title} exists");
         }
 
-        if ( ! HasAccessToEdit(article, userJwtInfo))
+        if (! IsHasAccessToEdit(article, userToken))
         {
             throw new BadRequestException("You don`t delete this article");
         }
         
         _mapper.Map(articleInput, article);
 
-        article.UpdatedDate = DateTime.UtcNow;
+        article.DateUpdated = DateTime.UtcNow;
 
         _context.Articles.Update(article);
         await _context.SaveChangesAsync();
@@ -108,11 +108,11 @@ public class ArticleService : IArticleService
         return articleDto;
     }
     
-    public async Task DeleteByIdAsync(int id, JWTInfo userJwtInfo)
+    public async Task DeleteByIdAsync(int id, JWTInfo userToken)
     {
         var article = await GetArticleByIdAsync(id);
 
-        if (! HasAccessToEdit(article, userJwtInfo))
+        if (! IsHasAccessToEdit(article, userToken))
         {
             throw new BadRequestException("You don`t delete this article");
         }
@@ -123,9 +123,9 @@ public class ArticleService : IArticleService
 
     private async Task<bool> CheckArticleTitleAreFreeAsync(int id, ArticleDtoInput articleInput)
     {
-        var articleById = await GetArticleByIdAsync(id);
+        var existArticle = await GetArticleByIdAsync(id);
 
-        return await _context.Articles.AnyAsync(article => article.Title == articleInput.Title && article.Id != articleById.Id);
+        return await _context.Articles.AnyAsync(article => article.Title == articleInput.Title && article.Id != existArticle.Id);
     }
     
     private async Task<Article> GetArticleByIdAsync(int id)
@@ -135,8 +135,8 @@ public class ArticleService : IArticleService
 
         return article;
     }
-    private bool HasAccessToEdit(Article article, JWTInfo userJwtInfo)
+    private bool IsHasAccessToEdit(Article article, JWTInfo userToken)
     {
-        return article.UserId == userJwtInfo.Id || userJwtInfo.Role == "Admin";
+        return article.UserId == userToken.Id || userToken.Role == "Admin";
     }
 }
