@@ -26,7 +26,7 @@ public class ArticleService : IArticleService
     public async Task<List<ArticleDto>> GetListAsync()
     {
         var articles = await _context.Articles
-            .Select(a => _mapper.Map<ArticleDto>(a))
+            .Select(article => _mapper.Map<ArticleDto>(article))
             .ToListAsync();
 
         return articles;
@@ -35,24 +35,20 @@ public class ArticleService : IArticleService
     public async Task<List<ArticleDto>> GetByUserIdAsync(int userId)
     {
         var user = await _userService.GetByIdAsync(userId);
-        if (user == null)
-        {
-            throw new NotFoundException($"User with Id: {userId} is not found");
-        }
 
         var articles = await _context.Articles
-            .Where(a => a.UserId == userId)
-            .Select(a => _mapper.Map<ArticleDto>(a))
+            .Where(article => article.UserId == userId)
+            .Select(article => _mapper.Map<ArticleDto>(article))
             .ToListAsync();
         
         return articles;
     }
 
-    public async Task<List<ArticleDto>> GetByThemeAsync(Topic topic)
+    public async Task<List<ArticleDto>> GetByTopicAsync(Topic topic)
     {
         var articles = await _context.Articles
-            .Where(a => a.Topic == topic)
-            .Select(a => _mapper.Map<ArticleDto>(a))
+            .Where(article => article.Topic == topic)
+            .Select(article => _mapper.Map<ArticleDto>(article))
             .ToListAsync();
 
         return articles;
@@ -69,7 +65,7 @@ public class ArticleService : IArticleService
     
     public async Task<ArticleDto> CreateAsync(JWTInfo userJwtInfo, ArticleDtoInput articleInput)
     {
-        if (await _context.Articles.AnyAsync(a => a.Title == articleInput.Title))
+        if (await _context.Articles.AnyAsync(article => article.Title == articleInput.Title))
         {
             throw new BadRequestException($"Article with Title: {articleInput.Title} exists");
         }
@@ -90,19 +86,19 @@ public class ArticleService : IArticleService
     {
         var article = await GetArticleByIdAsync(id);
         
-        if (await CheckTitleAreBusyAsync(id, articleInput))
+        if (! await CheckArticleTitleAreFreeAsync(id, articleInput))
         {
             throw new BadRequestException($"Article with Title: {articleInput.Title} exists");
         }
 
-        if ( ! HaveTheRightOnDeleteOrUpdate(article, userJwtInfo))
+        if ( ! HasAccessToEdit(article, userJwtInfo))
         {
             throw new BadRequestException("You don`t delete this article");
         }
         
         _mapper.Map(articleInput, article);
 
-        article.DateLastChangedArticle = DateTime.UtcNow;
+        article.UpdatedDate = DateTime.UtcNow;
 
         _context.Articles.Update(article);
         await _context.SaveChangesAsync();
@@ -116,7 +112,7 @@ public class ArticleService : IArticleService
     {
         var article = await GetArticleByIdAsync(id);
 
-        if (! HaveTheRightOnDeleteOrUpdate(article, userJwtInfo))
+        if (! HasAccessToEdit(article, userJwtInfo))
         {
             throw new BadRequestException("You don`t delete this article");
         }
@@ -125,21 +121,21 @@ public class ArticleService : IArticleService
         await _context.SaveChangesAsync();
     }
 
-    private async Task<bool> CheckTitleAreBusyAsync(int id, ArticleDtoInput articleInput)
+    private async Task<bool> CheckArticleTitleAreFreeAsync(int id, ArticleDtoInput articleInput)
     {
-        var article = await GetArticleByIdAsync(id);
+        var articleById = await GetArticleByIdAsync(id);
 
-        return await _context.Articles.AnyAsync(a => a.Title == articleInput.Title && a.Id != article.Id);
+        return await _context.Articles.AnyAsync(article => article.Title == articleInput.Title && article.Id != articleById.Id);
     }
     
     private async Task<Article> GetArticleByIdAsync(int id)
     {
-        var article = await _context.Articles.FirstOrDefaultAsync(a => a.Id == id) 
+        var article = await _context.Articles.FirstOrDefaultAsync(article => article.Id == id) 
                       ?? throw new NotFoundException($"Article with Id: {id} is not found");
 
         return article;
     }
-    private bool HaveTheRightOnDeleteOrUpdate(Article article, JWTInfo userJwtInfo)
+    private bool HasAccessToEdit(Article article, JWTInfo userJwtInfo)
     {
         return article.UserId == userJwtInfo.Id || userJwtInfo.Role == "Admin";
     }

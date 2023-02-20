@@ -14,9 +14,9 @@ public class Article
 
     public string FullText { get; set; }
     
-    public DateTime DateCreateArticle { get; set; } = DateTime.UtcNow;
+    public DateTime DateCreate { get; set; } = DateTime.UtcNow;
 
-    public DateTime DateLastChangedArticle { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
     
     public Topic Topic { get; set; }
 }

@@ -30,10 +30,7 @@ namespace MyBlog.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateCreateArticle")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateLastChangedArticle")
+                    b.Property<DateTime>("DateCreate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -50,6 +47,9 @@ namespace MyBlog.Infrastructure.Migrations
 
                     b.Property<int>("Topic")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

@@ -12,7 +12,7 @@ public interface IArticleService
     
     public Task<ArticleDto> GetByIdAsync(int id);
     
-    public Task<List<ArticleDto>> GetByThemeAsync(Topic topic);
+    public Task<List<ArticleDto>> GetByTopicAsync(Topic topic);
 
     public Task<ArticleDto> CreateAsync(JWTInfo userJwtInfo, ArticleDtoInput articleInput);
     

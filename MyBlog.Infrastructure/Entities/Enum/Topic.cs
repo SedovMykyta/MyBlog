@@ -2,9 +2,9 @@ namespace MyBlog.Infrastructure.Entities.Enum;
 
 public enum Topic
 {
-    Car = 1,
+    Cars = 1,
     Cooking = 2,
-    Since = 3,
+    Science = 3,
     Sport = 4,
     Hobby = 5,
    
