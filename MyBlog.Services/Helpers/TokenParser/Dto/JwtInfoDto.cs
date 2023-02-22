@@ -1,8 +1,8 @@
 namespace MyBlog.Service.Helpers.TokenParser.Dto;
 
-public class JWTInfo
+public class JwtInfoDto
 {
     public int Id { get; set; }
 
-    public string? Role { get; set; }
+    public string Role { get; set; }
 }

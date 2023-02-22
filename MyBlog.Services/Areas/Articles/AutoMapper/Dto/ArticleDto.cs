@@ -14,9 +14,9 @@ public class ArticleDto
 
     public string FullText { get; set; }
 
-    public DateTime DateCreateArticle { get; set; }
+    public DateTime DateCreate { get; set; } 
 
-    public DateTime DateLastChangedArticle { get; set; }
+    public DateTime DateUpdated { get; set; } 
     
     public Topic Topic { get; set; }
 }
