@@ -17,6 +17,7 @@ using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper;
 using MyBlog.Service.Areas.Users.Validators;
 using MyBlog.Service.Helpers.PasswordManagers;
+using MyBlog.Service.Helpers.TokenParser;
 
 var builder = WebApplication.CreateBuilder(args);
 

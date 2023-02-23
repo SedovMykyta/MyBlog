@@ -4,7 +4,6 @@ using MyBlog.Infrastructure;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Infrastructure.Entities.Enum;
 using MyBlog.Service.Areas.Articles.AutoMapper.Dto;
-using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Exception;
 using MyBlog.Service.Helpers.TokenParser.Dto;
 
@@ -14,13 +13,11 @@ public class ArticleService : IArticleService
 {
     private readonly MyBlogContext _context;
     private readonly IMapper _mapper;
-    private readonly IUserService _userService;
 
-    public ArticleService(IMapper mapper, MyBlogContext context, IUserService userService)
+    public ArticleService(IMapper mapper, MyBlogContext context)
     {
         _mapper = mapper;
         _context = context;
-        _userService = userService;
     }
 
     public async Task<List<ArticleDto>> GetListAsync()
@@ -29,17 +26,19 @@ public class ArticleService : IArticleService
             .Select(article => _mapper.Map<ArticleDto>(article))
             .ToListAsync();
 
+        ThrowIfEmptyList(articles);
+        
         return articles;
     }
     
     public async Task<List<ArticleDto>> GetByUserIdAsync(int userId)
     {
-        await _userService.GetByIdAsync(userId);
-
         var articles = await _context.Articles
             .Where(article => article.UserId == userId)
             .Select(article => _mapper.Map<ArticleDto>(article))
             .ToListAsync();
+        
+        ThrowIfEmptyList(articles);
         
         return articles;
     }
@@ -51,6 +50,8 @@ public class ArticleService : IArticleService
             .Select(article => _mapper.Map<ArticleDto>(article))
             .ToListAsync();
 
+        ThrowIfEmptyList(articles);
+        
         return articles;
     }
 
@@ -88,8 +89,6 @@ public class ArticleService : IArticleService
         
         _mapper.Map(articleInput, article);
 
-        article.DateUpdated = DateTime.UtcNow;
-
         _context.Articles.Update(article);
         await _context.SaveChangesAsync();
         
@@ -108,14 +107,21 @@ public class ArticleService : IArticleService
         await _context.SaveChangesAsync();
     }
 
-    
-    
+
     private async Task<Article> GetArticleByIdAsync(int id)
     {
         var article = await _context.Articles.FirstOrDefaultAsync(article => article.Id == id) 
                       ?? throw new NotFoundException($"Article with Id: {id} is not found");
 
         return article;
+    }
+
+    private void ThrowIfEmptyList<T>(IList<T> list)
+    {
+        if (list.Count == 0)
+        {
+            throw new NotFoundException("Articles not found");
+        }
     }
 
     private async Task ThrowIfTitleExistAsync(ArticleDtoInput articleInput)
@@ -130,8 +136,9 @@ public class ArticleService : IArticleService
     {
         var existArticle = await GetArticleByIdAsync(id);
 
-        if (await _context.Articles.AnyAsync(article =>
-                article.Title == articleInput.Title && article.Id != existArticle.Id))
+        bool isExistTitle = await _context.Articles.AnyAsync(article =>
+            article.Title == articleInput.Title && article.Id != existArticle.Id);
+        if (isExistTitle)
         {
             throw new BadRequestException($"Article with Title: {articleInput.Title} exists");
         }
@@ -141,7 +148,7 @@ public class ArticleService : IArticleService
     {
         if (articleUserId != userToken.Id || userToken.Role != "Admin")
         {
-            throw new BadRequestException("You don`t delete this article");
+            throw new BadRequestException("You can`t delete this article");
         };
     }
 }
