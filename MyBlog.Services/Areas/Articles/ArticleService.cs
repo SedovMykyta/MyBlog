@@ -6,6 +6,7 @@ using MyBlog.Infrastructure.Entities.Enum;
 using MyBlog.Service.Areas.Articles.AutoMapper.Dto;
 using MyBlog.Service.Exception;
 using MyBlog.Service.Helpers.TokenParser.Dto;
+using MyBlog.Service.Helpers.ExtensionMethods;
 
 namespace MyBlog.Service.Areas.Articles;
 
@@ -24,10 +25,9 @@ public class ArticleService : IArticleService
     {
         var articles = await _context.Articles
             .Select(article => _mapper.Map<ArticleDto>(article))
+            .ThrowIfEmpty()
             .ToListAsync();
 
-        ThrowIfEmptyList(articles);
-        
         return articles;
     }
     
@@ -36,10 +36,9 @@ public class ArticleService : IArticleService
         var articles = await _context.Articles
             .Where(article => article.UserId == userId)
             .Select(article => _mapper.Map<ArticleDto>(article))
+            .ThrowIfEmpty()
             .ToListAsync();
-        
-        ThrowIfEmptyList(articles);
-        
+
         return articles;
     }
 
@@ -48,10 +47,9 @@ public class ArticleService : IArticleService
         var articles = await _context.Articles
             .Where(article => article.Topic == topic)
             .Select(article => _mapper.Map<ArticleDto>(article))
+            .ThrowIfEmpty()
             .ToListAsync();
 
-        ThrowIfEmptyList(articles);
-        
         return articles;
     }
 
@@ -66,7 +64,7 @@ public class ArticleService : IArticleService
     
     public async Task<ArticleDto> CreateAsync(JwtInfoDto userToken, ArticleDtoInput articleInput)
     {
-        await ThrowIfTitleExistAsync(articleInput);
+        await ThrowIfTitleExistAsync(articleInput.Title);
         
         var article = _mapper.Map<Article>(articleInput);
 
@@ -85,7 +83,7 @@ public class ArticleService : IArticleService
         var article = await GetArticleByIdAsync(id);
 
         ThrowIfUserHasNotEditAccess(article.UserId, userToken);
-        await ThrowIfTitleExistAsync(articleInput, id);
+        await ThrowIfTitleExistAsync(articleInput.Title, article.Id);
         
         _mapper.Map(articleInput, article);
 
@@ -116,31 +114,19 @@ public class ArticleService : IArticleService
         return article;
     }
 
-    private void ThrowIfEmptyList<T>(IList<T> list)
+    private async Task ThrowIfTitleExistAsync(string title)
     {
-        if (list.Count == 0)
+        if (await _context.Articles.AnyAsync(article => article.Title == title))
         {
-            throw new NotFoundException("Articles not found");
-        }
-    }
-
-    private async Task ThrowIfTitleExistAsync(ArticleDtoInput articleInput)
-    {
-        if (await _context.Articles.AnyAsync(article => article.Title == articleInput.Title))
-        {
-            throw new BadRequestException($"Article with Title: {articleInput.Title} exists");
+            throw new BadRequestException($"Article with Title: {title} exists");
         }
     }
     
-    private async Task ThrowIfTitleExistAsync(ArticleDtoInput articleInput, int id)
+    private async Task ThrowIfTitleExistAsync(string title, int id)
     {
-        var existArticle = await GetArticleByIdAsync(id);
-
-        bool isExistTitle = await _context.Articles.AnyAsync(article =>
-            article.Title == articleInput.Title && article.Id != existArticle.Id);
-        if (isExistTitle)
+        if (await _context.Articles.AnyAsync(article => article.Title == title && article.Id != id))
         {
-            throw new BadRequestException($"Article with Title: {articleInput.Title} exists");
+            throw new BadRequestException($"Article with Title: {title} exists");
         }
     }
     
