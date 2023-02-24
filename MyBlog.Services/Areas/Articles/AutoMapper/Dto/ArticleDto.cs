@@ -1,8 +1,8 @@
-﻿using MyBlog.Infrastructure.Entities.Enum;
+using MyBlog.Infrastructure.Entities.Enum;
 
-namespace MyBlog.Infrastructure.Entities;
+namespace MyBlog.Service.Areas.Articles.AutoMapper.Dto;
 
-public class Article
+public class ArticleDto
 {
     public int Id { get; set; }
 
@@ -13,10 +13,10 @@ public class Article
     public string Description { get; set; }
 
     public string FullText { get; set; }
-    
-    public DateTime DateCreate { get; set; } = DateTime.UtcNow;
 
-    public DateTime DateUpdated { get; set; } = DateTime.UtcNow;
+    public DateTime DateCreate { get; set; } 
+
+    public DateTime DateUpdated { get; set; } 
     
     public Topic Topic { get; set; }
 }
