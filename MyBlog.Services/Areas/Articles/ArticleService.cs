@@ -62,7 +62,7 @@ public class ArticleService : IArticleService
         return articleDto;
     }
     
-    public async Task<ArticleDto> CreateAsync(JwtInfoDto userToken, ArticleDtoInput articleInput)
+    public async Task<ArticleDto> CreateAsync(ArticleDtoInput articleInput, JwtInfoDto userToken)
     {
         await ThrowIfTitleExistAsync(articleInput.Title);
         
@@ -78,7 +78,7 @@ public class ArticleService : IArticleService
         return articleDto;
     }
     
-    public async Task<ArticleDto> UpdateByIdAsync(int id, JwtInfoDto userToken, ArticleDtoInput articleInput)
+    public async Task<ArticleDto> UpdateByIdAsync(int id, ArticleDtoInput articleInput, JwtInfoDto userToken)
     {
         var article = await GetArticleByIdAsync(id);
 

@@ -37,6 +37,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IPasswordManager, PasswordManager>();
 builder.Services.AddTransient<IArticleService, ArticleService>();
+builder.Services.AddTransient<IJwtTokenParser, JwtTokenParser>();
 
 builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile));
 
