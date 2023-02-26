@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Service.Areas.Auth;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
+using MyBlog.Service.Areas.Users.Dto;
 
 namespace MyBlog.Controllers;
 
@@ -10,12 +11,10 @@ namespace MyBlog.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService;   
-    private readonly ILogger<UserController> _logger;  
+    private readonly IAuthService _authService;
     
-    public AuthController(ILogger<UserController> logger, IAuthService authService)
+    public AuthController(IAuthService authService)
     {
-        _logger = logger;
         _authService = authService;
     }
     
@@ -25,10 +24,10 @@ public class AuthController : ControllerBase
     /// <param name="userInput">UserDtoInput object</param>
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
-    /// <response code="409">UserWithThisParameterExists</response>
+    /// <response code="400">UserWithThisParameterExists</response>
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegisterAsync([FromBody] UserDtoInput userInput)
     {
         await _authService.RegisterAsync(userInput);

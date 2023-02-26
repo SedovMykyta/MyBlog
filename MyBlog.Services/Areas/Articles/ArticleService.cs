@@ -113,16 +113,8 @@ public class ArticleService : IArticleService
 
         return article;
     }
-
-    private async Task ThrowIfTitleExistAsync(string title)
-    {
-        if (await _context.Articles.AnyAsync(article => article.Title == title))
-        {
-            throw new BadRequestException($"Article with Title: {title} exists");
-        }
-    }
     
-    private async Task ThrowIfTitleExistAsync(string title, int id)
+    private async Task ThrowIfTitleExistAsync(string title, int id = -1)
     {
         if (await _context.Articles.AnyAsync(article => article.Title == title && article.Id != id))
         {

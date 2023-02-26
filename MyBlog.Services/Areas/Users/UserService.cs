@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using MyBlog.Infrastructure;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
+using MyBlog.Service.Areas.Users.Dto;
 using MyBlog.Service.Exception;
+using MyBlog.Service.Helpers.ExtensionMethods;
 using MyBlog.Service.Helpers.PasswordManagers;
 
 namespace MyBlog.Service.Areas.Users;
@@ -25,6 +27,7 @@ public class UserService : IUserService
     {
         var users = await _context.Users
             .Select(user => _mapper.Map<UserDto>(user))
+            .ThrowIfEmpty()
             .ToListAsync();
         
         return users;
@@ -39,19 +42,25 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public async Task<User> GetByEmailAsync(string email)
+    public async Task<UserDto> GetByEmailAsync(string email)
     {
         var user = await GetUserByEmailAsync(email);
 
-        return user;
+        var userDto = _mapper.Map<UserDto>(user);
+
+        return userDto;
     }
 
+    public async Task<User> GetByLoginAsync(UserDtoLogin userLogin)
+    {
+        var user = await GetUserByEmailAsync(userLogin.Email);
+
+        return user;
+    }
+    
     public async Task<UserDto> CreateAsync(UserDtoInput userInput)
     {
-        if (_context.Users.Any(user => user.Email == userInput.Email || user.Phone == userInput.Phone))
-        {
-            throw new BadRequestException($"User with this email or phone exists");
-        }
+        await ThrowIfEmailOrPhoneExistAsync(userInput);
 
         userInput.Password = _passwordManager.Encrypt(userInput.Password);
         
@@ -64,17 +73,13 @@ public class UserService : IUserService
         
         return userDto;
     } 
-
+    
     public async Task<UserDto> UpdateByIdAsync(int id, UserDtoInput userInput)
     {
         var user = await GetUserByIdAsync(id);
 
-        var isEmailAndPhoneAreFree = await CheckEmailAndPhoneAreFreeAsync(id, userInput);
-        if (! isEmailAndPhoneAreFree)
-        {
-            throw new BadRequestException($"User with this email or phone exists");
-        }
-        
+        await ThrowIfEmailOrPhoneExistAsync(userInput, id);
+
         userInput.Password = _passwordManager.Encrypt(userInput.Password);
         
         _mapper.Map(userInput, user);
@@ -110,43 +115,23 @@ public class UserService : IUserService
 
         return user;
     }
-    
-    private async Task<bool> CheckEmailAndPhoneAreFreeAsync(int id, UserDtoInput userInput)
+
+    private async Task ThrowIfEmailOrPhoneExistAsync(UserDtoInput userInput, int id = -1)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+        var emailIsBusy = await _context.Users.AnyAsync(user => user.Email == userInput.Email && user.Id != id);
+        var phoneIsBusy = await _context.Users.AnyAsync(user => user.Phone == userInput.Phone && user.Id != id);
 
-        bool isUserEmailRepeat = user.Email == userInput.Email;
-        bool isUserPhoneRepeat = user.Phone == userInput.Phone;
-
-        if (isUserEmailRepeat && isUserPhoneRepeat)
+        if (emailIsBusy && phoneIsBusy)
         {
-            return true;
+            throw new BadRequestException($"User with this email and phone exist");
         }
-        
-        if (! isUserEmailRepeat && ! isUserPhoneRepeat)
+        if (emailIsBusy)
         {
-            if (_context.Users.Any(user => user.Email == userInput.Email || user.Phone == userInput.Phone))
-            {
-                return false;
-            }
+            throw new BadRequestException($"User with this email exist");
         }
-        
-        if (isUserEmailRepeat)
+        if (phoneIsBusy)
         {
-            if (_context.Users.Any(user => user.Phone == userInput.Phone))
-            {
-                return false;
-            }
+            throw new BadRequestException($"User with this phone exist");
         }
-        
-        if (isUserPhoneRepeat)
-        {
-            if (_context.Users.Any(user => user.Email == userInput.Email))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

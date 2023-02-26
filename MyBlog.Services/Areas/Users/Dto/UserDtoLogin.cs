@@ -1,4 +1,4 @@
-﻿namespace MyBlog.Service.Areas.Users.AutoMapper.Dto;
+﻿namespace MyBlog.Service.Areas.Users.Dto;
 
 public class UserDtoLogin
 {
