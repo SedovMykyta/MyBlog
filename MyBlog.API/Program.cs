@@ -17,7 +17,7 @@ using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper;
 using MyBlog.Service.Areas.Users.Validators;
 using MyBlog.Service.Helpers.PasswordManagers;
-using MyBlog.Service.Helpers.TokenParser;
+using MyBlog.Service.Helpers.ClaimParser;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +37,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IPasswordManager, PasswordManager>();
 builder.Services.AddTransient<IArticleService, ArticleService>();
+builder.Services.AddTransient<IClaimsParser, ClaimsParser>();
 
 builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile));
 

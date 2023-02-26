@@ -5,7 +5,7 @@ using MyBlog.Infrastructure.Entities;
 using MyBlog.Infrastructure.Entities.Enum;
 using MyBlog.Service.Areas.Articles.AutoMapper.Dto;
 using MyBlog.Service.Exception;
-using MyBlog.Service.Helpers.TokenParser.Dto;
+using MyBlog.Service.Helpers.ClaimParser.Dto;
 using MyBlog.Service.Helpers.ExtensionMethods;
 
 namespace MyBlog.Service.Areas.Articles;
@@ -62,7 +62,7 @@ public class ArticleService : IArticleService
         return articleDto;
     }
     
-    public async Task<ArticleDto> CreateAsync(JwtInfoDto userToken, ArticleDtoInput articleInput)
+    public async Task<ArticleDto> CreateAsync(ArticleDtoInput articleInput, JwtInfoDto userToken)
     {
         await ThrowIfTitleExistAsync(articleInput.Title);
         
@@ -78,7 +78,7 @@ public class ArticleService : IArticleService
         return articleDto;
     }
     
-    public async Task<ArticleDto> UpdateByIdAsync(int id, JwtInfoDto userToken, ArticleDtoInput articleInput)
+    public async Task<ArticleDto> UpdateByIdAsync(int id, ArticleDtoInput articleInput, JwtInfoDto userToken)
     {
         var article = await GetArticleByIdAsync(id);
 
