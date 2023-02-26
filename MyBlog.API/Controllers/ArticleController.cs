@@ -20,7 +20,9 @@ public class ArticleController : ControllerBase
     private readonly IArticleService _articleService;
     private readonly Task<JwtInfoDto> _currentUserJwtInfo;
     public ArticleController(
-        ILogger<UserController> logger, IArticleService articleService, IClaimsParser parse)
+        ILogger<UserController> logger, 
+        IArticleService articleService, 
+        IClaimsParser parse)
     {
         _logger = logger;
         _articleService = articleService;
