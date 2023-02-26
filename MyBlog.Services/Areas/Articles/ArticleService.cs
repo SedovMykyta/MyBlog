@@ -5,7 +5,7 @@ using MyBlog.Infrastructure.Entities;
 using MyBlog.Infrastructure.Entities.Enum;
 using MyBlog.Service.Areas.Articles.AutoMapper.Dto;
 using MyBlog.Service.Exception;
-using MyBlog.Service.Helpers.TokenParser.Dto;
+using MyBlog.Service.Helpers.ClaimParser.Dto;
 using MyBlog.Service.Helpers.ExtensionMethods;
 
 namespace MyBlog.Service.Areas.Articles;

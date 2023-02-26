@@ -1,6 +1,6 @@
 using MyBlog.Infrastructure.Entities.Enum;
 using MyBlog.Service.Areas.Articles.AutoMapper.Dto;
-using MyBlog.Service.Helpers.TokenParser.Dto;
+using MyBlog.Service.Helpers.ClaimParser.Dto;
 
 namespace MyBlog.Service.Areas.Articles;
 

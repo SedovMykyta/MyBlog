@@ -8,7 +8,7 @@ public static class CollectionExtensions
     {
         if (!list.Any())
         {
-            throw new BadRequestException("This collection is empty");
+            throw new NotFoundException("This collection is empty");
         }
 
         return list;

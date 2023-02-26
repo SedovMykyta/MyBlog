@@ -1,4 +1,4 @@
-namespace MyBlog.Service.Helpers.TokenParser.Dto;
+namespace MyBlog.Service.Helpers.ClaimParser.Dto;
 
 public class JwtInfoDto
 {
