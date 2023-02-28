@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RegisterAsync([FromBody] UserDtoInput userInput)
+    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput)
     {
         await _authService.RegisterAsync(userInput);
 
@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> LoginAsync([FromBody] UserDtoLogin userLogin)
+    public async Task<IActionResult> LoginAsync([FromForm] UserDtoLogin userLogin)
     {
         var token = await _authService.LoginAsync(userLogin);
 

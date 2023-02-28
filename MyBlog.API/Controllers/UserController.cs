@@ -47,7 +47,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
+    public async Task<IActionResult> GetByEmailAsync([FromForm] string email)
     {
         var userDto = await _userService.GetByEmailAsync(email);
 
@@ -83,7 +83,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody] UserDtoInput userInput)
+    public async Task<IActionResult> CreateAsync([FromForm] UserDtoInput userInput)
     {
         var userDto = await _userService.CreateAsync(userInput);
 
@@ -104,7 +104,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] UserDtoInput userInput)
+    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromForm] UserDtoInput userInput)
     {
         var userDto = await _userService.UpdateByIdAsync(id, userInput);
 
