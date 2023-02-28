@@ -118,18 +118,18 @@ public class UserService : IUserService
 
     private async Task ThrowIfEmailOrPhoneExistAsync(UserDtoInput userInput, int id = -1)
     {
-        var emailIsBusy = await _context.Users.AnyAsync(user => user.Email == userInput.Email && user.Id != id);
-        var phoneIsBusy = await _context.Users.AnyAsync(user => user.Phone == userInput.Phone && user.Id != id);
+        var isEmailBusy = await _context.Users.AnyAsync(user => user.Email == userInput.Email && user.Id != id);
+        var isPhoneBusy = await _context.Users.AnyAsync(user => user.Phone == userInput.Phone && user.Id != id);
 
-        if (emailIsBusy && phoneIsBusy)
+        if (isEmailBusy && isPhoneBusy)
         {
             throw new BadRequestException($"User with this email and phone exist");
         }
-        if (emailIsBusy)
+        if (isEmailBusy)
         {
             throw new BadRequestException($"User with this email exist");
         }
-        if (phoneIsBusy)
+        if (isPhoneBusy)
         {
             throw new BadRequestException($"User with this phone exist");
         }

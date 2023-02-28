@@ -12,7 +12,7 @@ public interface IUserService
     
     public Task<UserDto> GetByEmailAsync(string email);
 
-    public Task<User> GetByLoginAsync(UserDtoLogin userLogin);
+    protected internal Task<User> GetByLoginAsync(UserDtoLogin userLogin);
 
     public Task<UserDto> CreateAsync(UserDtoInput userInput);
     
