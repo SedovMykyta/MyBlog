@@ -11,12 +11,10 @@ namespace MyBlog.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 public class UserController : ControllerBase
 {
-    private readonly ILogger<UserController> _logger;
     private readonly IUserService _userService;
 
-    public UserController(ILogger<UserController> logger, IUserService userService)
+    public UserController(IUserService userService)
     {
-        _logger = logger;
         _userService = userService;
     }
 
@@ -25,9 +23,11 @@ public class UserController : ControllerBase
     /// </summary>
     /// <returns>Returns UserDto list</returns>
     /// <response code="200">Success</response>
+    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetListAsync()
     {
         var users = await _userService.GetListAsync();
@@ -78,9 +78,11 @@ public class UserController : ControllerBase
     /// <param name="userInput">UserDtoInput object</param>
     /// <returns>Created UserDto object</returns>
     /// <response code="200">Success</response>
+    /// <response code="400">EmailOrPhoneExists</response>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody] UserDtoInput userInput)
     {
         var userDto = await _userService.CreateAsync(userInput);
@@ -95,10 +97,12 @@ public class UserController : ControllerBase
     /// <param name="userInput">UserDtoInput object</param>
     /// <returns>Updated UserDto object</returns>
     /// <response code="200">Success</response>
+    /// <response code="400">EmailOrPhoneExists</response>
     /// <response code="404">UserNotFound</response>
     [HttpPut ("{id:int}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] UserDtoInput userInput)
     {

@@ -16,15 +16,11 @@ namespace MyBlog.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 public class ArticleController : ControllerBase
 {
-    private readonly ILogger<UserController> _logger;
     private readonly IArticleService _articleService;
     private readonly Task<JwtInfoDto> _currentUserJwtInfo;
-    public ArticleController(
-        ILogger<UserController> logger, 
-        IArticleService articleService, 
-        IClaimsParser parse)
+    
+    public ArticleController(IArticleService articleService, IClaimsParser parse)
     {
-        _logger = logger;
         _articleService = articleService;
         _currentUserJwtInfo = 
             Task.Run(() => parse.ToJwtInfo(HttpContext.User.Identity as ClaimsIdentity));

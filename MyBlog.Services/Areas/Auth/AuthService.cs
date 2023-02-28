@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
+using MyBlog.Service.Areas.Users.Dto;
 using MyBlog.Service.Exception;
 using MyBlog.Service.Helpers.PasswordManagers;
 
@@ -40,7 +41,7 @@ public class AuthService : IAuthService
 
     private async Task<User> AuthenticateAsync(UserDtoLogin userLogin)
     {
-        var user = await _userService.GetByEmailAsync(userLogin.Email);
+        var user = await _userService.GetByLoginAsync(userLogin);
         if (userLogin.Password != _passwordManager.Decrypt(user.Password))
         {
             throw new BadRequestException("You entering wrong password");
@@ -64,7 +65,7 @@ public class AuthService : IAuthService
             new Claim(ClaimTypes.Role, user.Role.ToString()),
         };
 
-        var token = new JwtSecurityToken(
+        JwtSecurityToken token = new (
             _config["Jwt:Issuer"],
             _config["Jwt:Audience"],
             claims,

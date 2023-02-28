@@ -10,7 +10,7 @@ public class ValidationFilter : IAsyncActionFilter
         if (! context.ModelState.IsValid)
         {
             var fieldErrors = context.ModelState
-                .Where(kvp => kvp.Value!.Errors.Count > 0)
+                .Where(keyValuePair => keyValuePair.Value!.Errors.Count > 0)
                 .ToDictionary(key => key.Key,
                     value => string.Join(". ", value.Value!.Errors.Select(modelError => modelError.ErrorMessage)));
             
