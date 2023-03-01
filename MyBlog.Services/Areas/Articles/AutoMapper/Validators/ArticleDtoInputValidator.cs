@@ -6,7 +6,7 @@ namespace MyBlog.Service.Areas.Articles.AutoMapper.Validators;
 
 public class ArticleDtoInputValidator: AbstractValidator<ArticleDtoInput>
 {
-    private const long MaxSizeImage = 4_194_304;
+    private const int MaxSizeImage = 4_194_304;
     
     public ArticleDtoInputValidator()
     {
@@ -23,7 +23,7 @@ public class ArticleDtoInputValidator: AbstractValidator<ArticleDtoInput>
             .NotEmpty().WithMessage("The Topic field is required");
         
         RuleFor(article => article.Image)
-            .Must(image => image == null? throw new BadRequestException("Image must be uploaded"): true )
+            .Must(image => image == null ? throw new BadRequestException("Image must be uploaded"): true )
             .Must(image => image.FileName.Substring(image.FileName.LastIndexOf('.') + 1).ToLower() == "jpg")
             .WithMessage("Upload file must have a 'jpg' extension")
             .Must(image => image.Length < MaxSizeImage).WithMessage("Upload file must be less than 4mb");

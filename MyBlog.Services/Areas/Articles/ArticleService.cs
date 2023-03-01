@@ -40,6 +40,17 @@ public class ArticleService : IArticleService
         return articleDto;
     }
 
+    public async Task<List<ArticleDto>> GetByUserIdAsync(int userId)
+    {
+        var articles = await _context.Articles
+            .Where(article => article.UserId == userId)
+            .Select(article => _mapper.Map<ArticleDto>(article))
+            .ThrowIfEmpty()
+            .ToListAsync();
+
+        return articles;
+    }
+
     public async Task<List<ArticleDto>> GetByTopicAsync(Topic topic)
     {
         var articles = await _context.Articles
@@ -55,17 +66,6 @@ public class ArticleService : IArticleService
     {
         var articles = await _context.Articles
             .Where(article => article.Title.Contains(title) || title.Contains(article.Title))
-            .Select(article => _mapper.Map<ArticleDto>(article))
-            .ThrowIfEmpty()
-            .ToListAsync();
-
-        return articles;
-    }
-
-    public async Task<List<ArticleDto>> GetByUserIdAsync(int userId)
-    {
-        var articles = await _context.Articles
-            .Where(article => article.UserId == userId)
             .Select(article => _mapper.Map<ArticleDto>(article))
             .ThrowIfEmpty()
             .ToListAsync();

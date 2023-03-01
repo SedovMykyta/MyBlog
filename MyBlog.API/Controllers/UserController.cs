@@ -37,24 +37,6 @@ public class UserController : ControllerBase
 
 
     /// <summary>
-    /// Get User by email
-    /// </summary>
-    /// <param name="email">User email</param>
-    /// <returns>Returns UserDto</returns>
-    /// <response code="200">Success</response>
-    /// <response code="404">UserNotFound</response>
-    [HttpGet("{email}")]
-    [Authorize(Roles = "Admin")]
-    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByEmailAsync([FromForm] string email)
-    {
-        var userDto = await _userService.GetByEmailAsync(email);
-
-        return Ok(userDto);
-    }
-
-    /// <summary>
     /// Get User by id
     /// </summary>
     /// <param name="id">User id</param>
@@ -68,6 +50,24 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
         var userDto = await _userService.GetByIdAsync(id);
+
+        return Ok(userDto);
+    }
+
+    /// <summary>
+    /// Get User by email
+    /// </summary>
+    /// <param name="email">User email</param>
+    /// <returns>Returns UserDto</returns>
+    /// <response code="200">Success</response>
+    /// <response code="404">UserNotFound</response>
+    [HttpGet("{email}")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByEmailAsync([FromForm] string email)
+    {
+        var userDto = await _userService.GetByEmailAsync(email);
 
         return Ok(userDto);
     }

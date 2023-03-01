@@ -13,7 +13,7 @@ public class ArticleMappingProfile : Profile
         CreateMap<ArticleDtoInput, Article>()
             .ForMember(article => article.DateUpdated,
                 memberOptions => memberOptions.MapFrom(dateUpdated => DateTime.UtcNow))
-            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image.ToBase64String()));
+            .ForMember(dest => dest.ImageBase64, opt => opt.MapFrom(src => src.Image.ToBase64String()));
         
     }
 }

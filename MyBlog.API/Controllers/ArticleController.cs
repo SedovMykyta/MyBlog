@@ -62,6 +62,23 @@ public class ArticleController : ControllerBase
     }
 
     /// <summary>
+    /// Get Articles by user id
+    /// </summary>
+    /// <param name="id">User id</param>
+    /// <returns>Returns ArticlesDto</returns>
+    /// <response code="200">Success</response>
+    /// <response code="404">CollectionIsEmpty</response>
+    [HttpGet("userId/{id:int}")]
+    [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByUserIdAsync([FromForm] int id)
+    {
+        var articles = await _articleService.GetByUserIdAsync(id);
+
+        return Ok(articles);
+    }
+
+    /// <summary>
     /// Get Articles by topic
     /// </summary>
     /// <param name="topic">Theme article</param>
@@ -77,7 +94,7 @@ public class ArticleController : ControllerBase
         
         return Ok(articles);
     }
-    
+
     /// <summary>
     /// Get Articles by title
     /// </summary>
@@ -92,23 +109,6 @@ public class ArticleController : ControllerBase
     {
         var articles = await _articleService.GetByTitleAsync(title);
         
-        return Ok(articles);
-    }
-
-    /// <summary>
-    /// Get Articles by user id
-    /// </summary>
-    /// <param name="id">User id</param>
-    /// <returns>Returns ArticlesDto</returns>
-    /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
-    [HttpGet("userId/{id:int}")]
-    [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByUserIdAsync([FromForm] int id)
-    {
-        var articles = await _articleService.GetByUserIdAsync(id);
-
         return Ok(articles);
     }
 
