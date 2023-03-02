@@ -30,7 +30,16 @@ public class ArticleService : IArticleService
 
         return articles;
     }
-    
+
+    public async Task<ArticleDto> GetByIdAsync(int id)
+    {
+        var article = await GetArticleByIdAsync(id);
+
+        var articleDto = _mapper.Map<ArticleDto>(article);
+
+        return articleDto;
+    }
+
     public async Task<List<ArticleDto>> GetByUserIdAsync(int userId)
     {
         var articles = await _context.Articles
@@ -53,15 +62,17 @@ public class ArticleService : IArticleService
         return articles;
     }
 
-    public async Task<ArticleDto> GetByIdAsync(int id)
+    public async Task<List<ArticleDto>> GetByTitleAsync(string title)
     {
-        var article = await GetArticleByIdAsync(id);
+        var articles = await _context.Articles
+            .Where(article => article.Title.Contains(title) || title.Contains(article.Title))
+            .Select(article => _mapper.Map<ArticleDto>(article))
+            .ThrowIfEmpty()
+            .ToListAsync();
 
-        var articleDto = _mapper.Map<ArticleDto>(article);
-
-        return articleDto;
+        return articles;
     }
-    
+
     public async Task<ArticleDto> CreateAsync(ArticleDtoInput articleInput, JwtInfoDto userToken)
     {
         await ThrowIfTitleExistAsync(articleInput.Title);

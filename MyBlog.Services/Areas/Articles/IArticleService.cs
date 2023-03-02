@@ -7,12 +7,14 @@ namespace MyBlog.Service.Areas.Articles;
 public interface IArticleService
 {
     public Task<List<ArticleDto>> GetListAsync();
-    
-    public Task<List<ArticleDto>> GetByUserIdAsync(int userId);
-    
+
     public Task<ArticleDto> GetByIdAsync(int id);
-    
+
+    public Task<List<ArticleDto>> GetByUserIdAsync(int userId);
+
     public Task<List<ArticleDto>> GetByTopicAsync(Topic topic);
+
+    public Task<List<ArticleDto>> GetByTitleAsync(string title);
 
     public Task<ArticleDto> CreateAsync(ArticleDtoInput articleInput, JwtInfoDto userToken);
     

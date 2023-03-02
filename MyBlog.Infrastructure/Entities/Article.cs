@@ -14,6 +14,8 @@ public class Article
 
     public string FullText { get; set; }
     
+    public string ImageBase64 { get; set; }
+    
     public DateTime DateCreate { get; set; } = DateTime.UtcNow;
 
     public DateTime DateUpdated { get; set; } = DateTime.UtcNow;

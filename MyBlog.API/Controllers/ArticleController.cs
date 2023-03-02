@@ -62,23 +62,6 @@ public class ArticleController : ControllerBase
     }
 
     /// <summary>
-    /// Get Articles by topic
-    /// </summary>
-    /// <param name="topic">Theme article</param>
-    /// <returns>Returns ArticlesDto</returns>
-    /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
-    [HttpGet("topic/{topic}")]
-    [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByTopicAsync([FromRoute] Topic topic)
-    {
-        var articles = await _articleService.GetByTopicAsync(topic);
-        
-        return Ok(articles);
-    }
-
-    /// <summary>
     /// Get Articles by user id
     /// </summary>
     /// <param name="id">User id</param>
@@ -88,10 +71,44 @@ public class ArticleController : ControllerBase
     [HttpGet("userId/{id:int}")]
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByUserIdAsync([FromRoute] int id)
+    public async Task<IActionResult> GetByUserIdAsync([FromForm] int id)
     {
         var articles = await _articleService.GetByUserIdAsync(id);
 
+        return Ok(articles);
+    }
+
+    /// <summary>
+    /// Get Articles by topic
+    /// </summary>
+    /// <param name="topic">Theme article</param>
+    /// <returns>Returns ArticlesDto</returns>
+    /// <response code="200">Success</response>
+    /// <response code="404">CollectionIsEmpty</response>
+    [HttpGet("topic/{topic}")]
+    [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByTopicAsync([FromForm] Topic topic)
+    {
+        var articles = await _articleService.GetByTopicAsync(topic);
+        
+        return Ok(articles);
+    }
+
+    /// <summary>
+    /// Get Articles by title
+    /// </summary>
+    /// <param name="title">Title article</param>
+    /// <returns>Returns ArticlesDto</returns>
+    /// <response code="200">Success</response>
+    /// <response code="404">TitleNotFound</response>
+    [HttpGet("title/{title}")]
+    [ProducesResponseType(typeof(List<ArticleDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByTitleAsync([FromForm] string title)
+    {
+        var articles = await _articleService.GetByTitleAsync(title);
+        
         return Ok(articles);
     }
 
@@ -105,7 +122,7 @@ public class ArticleController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody] ArticleDtoInput articleInput)
+    public async Task<IActionResult> CreateAsync([FromForm] ArticleDtoInput articleInput)
     {
         var article = await _articleService.CreateAsync(articleInput, _currentUserJwtInfo.Result);
 
@@ -125,7 +142,7 @@ public class ArticleController : ControllerBase
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromBody] ArticleDtoInput articleInput)
+    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromForm] ArticleDtoInput articleInput)
     {
         var article = await _articleService.UpdateByIdAsync(id, articleInput, _currentUserJwtInfo.Result);
 
