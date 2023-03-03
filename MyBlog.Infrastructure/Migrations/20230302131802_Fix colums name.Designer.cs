@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBlog.Infrastructure;
 
@@ -11,9 +12,11 @@ using MyBlog.Infrastructure;
 namespace MyBlog.Infrastructure.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230302131802_Fix colums name")]
+    partial class Fixcolumsname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +76,7 @@ namespace MyBlog.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleId")
+                    b.Property<int?>("ArticleId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
@@ -106,7 +109,7 @@ namespace MyBlog.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleId")
+                    b.Property<int?>("ArticleId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -129,7 +132,7 @@ namespace MyBlog.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleId")
+                    b.Property<int?>("ArticleId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -198,9 +201,7 @@ namespace MyBlog.Infrastructure.Migrations
                 {
                     b.HasOne("MyBlog.Infrastructure.Entities.Article", "Article")
                         .WithMany("Comments")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ArticleId");
 
                     b.HasOne("MyBlog.Infrastructure.Entities.User", "User")
                         .WithMany("Comments")
@@ -215,9 +216,7 @@ namespace MyBlog.Infrastructure.Migrations
                 {
                     b.HasOne("MyBlog.Infrastructure.Entities.Article", "Article")
                         .WithMany("Dislikes")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ArticleId");
 
                     b.HasOne("MyBlog.Infrastructure.Entities.User", "User")
                         .WithMany("Dislikes")
@@ -232,9 +231,7 @@ namespace MyBlog.Infrastructure.Migrations
                 {
                     b.HasOne("MyBlog.Infrastructure.Entities.Article", "Article")
                         .WithMany("Likes")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ArticleId");
 
                     b.HasOne("MyBlog.Infrastructure.Entities.User", "User")
                         .WithMany("Likes")
