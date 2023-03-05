@@ -8,6 +8,7 @@ namespace MyBlog.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[Authorize(Roles = "Admin")]
 [Produces(MediaTypeNames.Application.Json)]
 public class UserController : ControllerBase
 {
@@ -25,7 +26,6 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">CollectionIsEmpty</response>
     [HttpGet]
-    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetListAsync()
@@ -44,7 +44,6 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
@@ -62,7 +61,6 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpGet("{email}")]
-    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByEmailAsync([FromForm] string email)
@@ -80,7 +78,6 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="400">EmailOrPhoneExists</response>
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync([FromForm] UserDtoInput userInput)
@@ -100,7 +97,6 @@ public class UserController : ControllerBase
     /// <response code="400">EmailOrPhoneExists</response>
     /// <response code="404">UserNotFound</response>
     [HttpPut ("{id:int}")]
-    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -119,7 +115,6 @@ public class UserController : ControllerBase
     /// <response code="200">Success</response>
     /// <response code="404">UserNotFound</response>
     [HttpDelete ("{id:int}")]
-    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteByIdAsync([FromRoute] int id)
