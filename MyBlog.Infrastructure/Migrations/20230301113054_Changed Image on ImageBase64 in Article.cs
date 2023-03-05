@@ -10,20 +10,19 @@ namespace MyBlog.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ImageBase64",
+            migrationBuilder.RenameColumn(
+                name: "Image",
                 table: "Articles",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+                newName: "ImageBase64");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ImageBase64",
-                table: "Articles");
+            migrationBuilder.RenameColumn(
+                name: "Image",
+                table: "Articles",
+                newName: "ImageBase64");
         }
     }
 }
