@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Service.Areas.Auth;
+using MyBlog.Service.Areas.Mailing;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 using MyBlog.Service.Areas.Users.Dto;
 
@@ -12,10 +13,11 @@ namespace MyBlog.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
-    
-    public AuthController(IAuthService authService)
+    private readonly IEmailService _emailService;
+    public AuthController(IAuthService authService, IEmailService emailService)
     {
         _authService = authService;
+        _emailService = emailService;
     }
     
     /// <summary>
@@ -31,6 +33,8 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput)
     {
         await _authService.RegisterAsync(userInput);
+
+        await _emailService.SendMessageAsync("You success register on site 'My Blog'.", userInput.Email);
 
         return Ok();
     }

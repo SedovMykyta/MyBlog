@@ -13,6 +13,7 @@ using MyBlog.Middlewares.ExceptionHandling;
 using MyBlog.Service.Areas.Articles;
 using MyBlog.Service.Areas.Articles.AutoMapper;
 using MyBlog.Service.Areas.Auth;
+using MyBlog.Service.Areas.Mailing;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper;
 using MyBlog.Service.Areas.Users.Validators;
@@ -38,6 +39,7 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IPasswordManager, PasswordManager>();
 builder.Services.AddTransient<IArticleService, ArticleService>();
 builder.Services.AddTransient<IClaimsParser, ClaimsParser>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile));
 
