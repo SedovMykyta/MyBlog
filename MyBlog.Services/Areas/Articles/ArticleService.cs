@@ -135,7 +135,7 @@ public class ArticleService : IArticleService
     
     private void ThrowIfUserHasNotEditAccess(int articleUserId, JwtInfoDto userToken)
     {
-        if (articleUserId != userToken.Id || userToken.Role != "Admin")
+        if (articleUserId != userToken.Id && userToken.Role != "Admin")
         {
             throw new BadRequestException("You can`t delete this article");
         };
