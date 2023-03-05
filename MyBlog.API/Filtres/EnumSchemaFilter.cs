@@ -17,6 +17,7 @@ public class EnumSchemaFilter : ISchemaFilter
         Enum.GetNames(context.Type)
             .ToList()
             .ForEach(name => model.Enum.Add(new OpenApiString($"{name}")));
+        
         model.Type = "string"; 
         model.Format = string.Empty;
     }
