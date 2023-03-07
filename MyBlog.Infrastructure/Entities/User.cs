@@ -16,5 +16,6 @@ public class User
     public IList<Article>? Articles { get; set; } 
     public IList<Comment> Comments { get; set; }
     public IList<Like> Likes { get; set; }
-    public IList<Dislike> Dislikes { get; set; } 
+    public IList<Dislike> Dislikes { get; set; }
+    public UserSubscription Subscription { get; set; }
 }

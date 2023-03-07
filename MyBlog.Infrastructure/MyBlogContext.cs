@@ -10,7 +10,8 @@ public class MyBlogContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Like> Likes { get; set; }
     public DbSet<Dislike> Dislikes { get; set; }
-    
+    public DbSet<UserSubscription> UserSubscriptions { get; set; }
+
     public MyBlogContext(DbContextOptions<MyBlogContext> options) : base(options)
     {
     }

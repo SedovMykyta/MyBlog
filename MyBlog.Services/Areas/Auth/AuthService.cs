@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MyBlog.Infrastructure;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
@@ -17,17 +18,28 @@ public class AuthService : IAuthService
     private readonly IUserService _userService;
     private readonly IConfiguration _config;
     private readonly IPasswordManager _passwordManager;
+    private readonly MyBlogContext _context;
     
-    public AuthService(IUserService userService, IConfiguration config, IPasswordManager passwordManager)
+    public AuthService(IUserService userService, IConfiguration config, IPasswordManager passwordManager, MyBlogContext context)
     {
         _userService = userService;
         _config = config;
         _passwordManager = passwordManager;
+        _context = context;
     }
 
-    public async Task RegisterAsync(UserDtoInput userInput)
+    public async Task RegisterAsync(UserDtoInput userInput, bool isSubscribeToEmail)
     {
-         await _userService.CreateAsync(userInput);
+         var userDto = await _userService.CreateAsync(userInput);
+
+         var userSubscription = new UserSubscription
+         { 
+             UserId = userDto.Id,
+             IsSubscribedToEmail = isSubscribeToEmail
+         };
+
+         await _context.UserSubscriptions.AddAsync(userSubscription);
+         await _context.SaveChangesAsync();
     }
 
     public async Task<string> LoginAsync(UserDtoLogin userLogin)

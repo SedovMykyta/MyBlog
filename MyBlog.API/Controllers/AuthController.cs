@@ -13,28 +13,30 @@ namespace MyBlog.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
-    private readonly IEmailService _emailService;
-    public AuthController(IAuthService authService, IEmailService emailService)
+    private readonly IMailingService _mailingService;
+    
+    public AuthController(IAuthService authService, IMailingService mailingService)
     {
         _authService = authService;
-        _emailService = emailService;
+        _mailingService = mailingService;
     }
-    
+
     /// <summary>
     /// Register new account
     /// </summary>
     /// <param name="userInput">UserDtoInput object</param>
+    /// <param name="isSubscribeToEmail">bool answer</param>
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
     /// <response code="400">UserWithThisParameterExists</response>
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput)
+    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput, [FromForm] bool isSubscribeToEmail)
     {
-        await _authService.RegisterAsync(userInput);
+        await _authService.RegisterAsync(userInput, isSubscribeToEmail);
 
-        await _emailService.SendMessageAsync("You success register on site 'My Blog'.", userInput.Email);
+        await _mailingService.SendEmailToUserAsync("You successfully register on site 'My Blog'.", userInput.Email);
 
         return Ok();
     }

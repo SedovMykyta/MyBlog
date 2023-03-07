@@ -14,7 +14,7 @@ public class Article
     public Topic Topic { get; set; }
     
     public int UserId { get; set; } 
-    public virtual User User { get; set; }
+    public User User { get; set; }
     
     public IList<Comment> Comments { get; set; } 
     public IList<Like> Likes { get; set; } 

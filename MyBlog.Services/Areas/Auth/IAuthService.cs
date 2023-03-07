@@ -5,7 +5,7 @@ namespace MyBlog.Service.Areas.Auth;
 
 public interface IAuthService
 {
-    public Task RegisterAsync(UserDtoInput userInput);
+    public Task RegisterAsync(UserDtoInput userInput, bool isSubscribeToEmail);
     
     public Task<string> LoginAsync(UserDtoLogin userLogin);
 
