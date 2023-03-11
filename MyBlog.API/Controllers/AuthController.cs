@@ -32,11 +32,11 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput, [FromForm] bool isSubscribeToEmail)
+    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput, [FromQuery] bool isSubscribeToEmail)
     {
         await _authService.RegisterAsync(userInput, isSubscribeToEmail);
 
-        await _mailingService.SendEmailToUserAsync("You successfully register on site 'My Blog'.", userInput.Email);
+        await _mailingService.SendEmailToUserAsync("You successfully registered on site 'My Blog'.", userInput.Email);
 
         return Ok();
     }

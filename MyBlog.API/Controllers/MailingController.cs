@@ -8,7 +8,7 @@ using MyBlog.Service.Helpers.ClaimParser.Dto;
 
 namespace MyBlog.Controllers;
 
-[Route("api/article")]
+[Route("api/mailing")]
 [ApiController]
 [Authorize]
 [Produces(MediaTypeNames.Application.Json)]
@@ -21,7 +21,6 @@ public class MailingController : ControllerBase
     {
         _mailingService = mailingService;
         _currentUserJwtInfo = Task.Run(() => parse.ToJwtInfo(HttpContext.User.Identity as ClaimsIdentity));
-
     }
     
     /// <summary>
@@ -36,9 +35,9 @@ public class MailingController : ControllerBase
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SendEmailToUserAsync([FromForm] string message, [FromForm] string recipientEmail)
+    public async Task<IActionResult> SendEmailToUserAsync([FromForm] string recipientEmail, [FromForm] string message)
     {
-        await _mailingService.SendEmailToUserAsync(message, recipientEmail);
+        await _mailingService.SendEmailToUserAsync(recipientEmail, message);
 
         return Ok();
     }
@@ -62,9 +61,8 @@ public class MailingController : ControllerBase
     }
 
     /// <summary>
-    /// Change subscribe on mailing
+    /// Subscribe on mailing
     /// </summary>
-    /// <param name="isSubscribeToEmail"></param>
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
     /// <response code="400">UserNotFound</response>
@@ -72,8 +70,23 @@ public class MailingController : ControllerBase
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task ChangeSubscribeOnMailingAsync([FromForm] bool isSubscribeToEmail)
+    public async Task SubscribeOnMailingAsync()
     {
-        await _mailingService.ChangeSubscribeOnMailingAsync(isSubscribeToEmail, _currentUserJwtInfo.Result.Id);
+        await _mailingService.SubscribeOnMailingAsync(_currentUserJwtInfo.Result.Id);
+    }
+    
+    /// <summary>
+    /// Unsubscribe on mailing
+    /// </summary>
+    /// <returns>Returns Ok</returns>
+    /// <response code="200">Success</response>
+    /// <response code="400">UserNotFound</response>
+    [HttpPost ("changeSubscribe")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task UnsubscribeOnMailingAsync()
+    {
+        await _mailingService.UnsubscribeOnMailingAsync(_currentUserJwtInfo.Result.Id);
     }
 }

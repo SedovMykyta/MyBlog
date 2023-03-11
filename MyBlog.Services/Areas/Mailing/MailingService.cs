@@ -22,7 +22,17 @@ public class MailingService : IMailingService
         _settings = settings.Value;
     }
 
-    public async Task SendEmailToUserAsync(string message, string recipientEmail)
+    public async Task SendEmailToSubscribedUsersAsync(string message)
+    {
+        var recipientEmails = await GetAllUsersEmailAsync();
+
+        foreach (var email in recipientEmails)
+        {
+            await SendEmailToUserAsync(message, email);
+        }
+    }
+
+    public async Task SendEmailToUserAsync(string recipientEmail, string message)
     {
         await ThrowIfEmailNotFound(recipientEmail);
         
@@ -44,36 +54,30 @@ public class MailingService : IMailingService
             await client.DisconnectAsync(true);
         }
     }
-
-    public async Task SendEmailToSubscribedUsersAsync(string message)
+    
+    public async Task SubscribeOnMailingAsync(int id)
     {
-        var recipientEmails = await GetAllUsersEmailAsync();
+        var userSubscription = await _context.UserSubscriptions.FirstOrDefaultAsync(user => user.UserId == id)
+                               ?? throw new NotFoundException($"User with Id: {id} is not found");
 
-        foreach (var email in recipientEmails)
-        {
-            await SendEmailToUserAsync(message, email);
-        }
+        userSubscription.IsSubscribedToEmail = true;
+
+        _context.UserSubscriptions.Update(userSubscription);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task ChangeSubscribeOnMailingAsync(bool isSubscribeToEmail, int id)
+    public async Task UnsubscribeOnMailingAsync(int id)
     {
-        var userSubscription = await GetUserSubscriptionByUserIdAsync(id);
+        var userSubscription = await _context.UserSubscriptions.FirstOrDefaultAsync(user => user.UserId == id)
+                               ?? throw new NotFoundException($"User with Id: {id} is not found");
 
-        userSubscription.IsSubscribedToEmail = isSubscribeToEmail;
+        userSubscription.IsSubscribedToEmail = false;
 
         _context.UserSubscriptions.Update(userSubscription);
         await _context.SaveChangesAsync();
     }
 
 
-    private async Task<UserSubscription> GetUserSubscriptionByUserIdAsync(int id)
-    {
-        var user = await _context.UserSubscriptions.FirstOrDefaultAsync(user => user.UserId == id)
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
-
-        return user;
-    }
-    
     private async Task ThrowIfEmailNotFound(string email)
     {
         if (!await _context.Users.AnyAsync(user => user.Email == email))
@@ -87,7 +91,7 @@ public class MailingService : IMailingService
         var emailsSubscribedUsers = await _context.Users.
             Where(user => user.Role == Role.User).
             Include(user => user.Subscription).
-            Where(user => user.Subscription.IsSubscribedToEmail == true).
+            Where(user => user.Subscription.IsSubscribedToEmail).
             Select(user => user.Email).
             ThrowIfEmpty().
             ToListAsync();
