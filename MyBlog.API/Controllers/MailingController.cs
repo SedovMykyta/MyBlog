@@ -66,13 +66,13 @@ public class MailingController : ControllerBase
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
     /// <response code="400">UserNotFound</response>
-    [HttpPost ("changeSubscribe")]
+    [HttpPost ("subscribe")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task SubscribeOnMailingAsync()
+    public async Task SubscribeAsync()
     {
-        await _mailingService.SubscribeOnMailingAsync(_currentUserJwtInfo.Result.Id);
+        await _mailingService.SubscribeAsync(_currentUserJwtInfo.Result.Id);
     }
     
     /// <summary>
@@ -81,12 +81,12 @@ public class MailingController : ControllerBase
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
     /// <response code="400">UserNotFound</response>
-    [HttpPost ("changeSubscribe")]
+    [HttpPost ("unsubscribe")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task UnsubscribeOnMailingAsync()
+    public async Task UnsubscribeAsync()
     {
-        await _mailingService.UnsubscribeOnMailingAsync(_currentUserJwtInfo.Result.Id);
+        await _mailingService.UnsubscribeAsync(_currentUserJwtInfo.Result.Id);
     }
 }

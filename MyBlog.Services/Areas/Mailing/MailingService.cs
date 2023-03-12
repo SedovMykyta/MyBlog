@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MyBlog.Infrastructure;
-using MyBlog.Infrastructure.Entities;
 using MyBlog.Infrastructure.Entities.Enum;
 using MyBlog.Service.Areas.Mailing.Models;
 using MyBlog.Service.Exception;
@@ -24,7 +23,7 @@ public class MailingService : IMailingService
 
     public async Task SendEmailToSubscribedUsersAsync(string message)
     {
-        var recipientEmails = await GetAllUsersEmailAsync();
+        var recipientEmails = await GetEmailsSubscribedUsersAsync();
 
         foreach (var email in recipientEmails)
         {
@@ -55,7 +54,7 @@ public class MailingService : IMailingService
         }
     }
     
-    public async Task SubscribeOnMailingAsync(int id)
+    public async Task SubscribeAsync(int id)
     {
         var userSubscription = await _context.UserSubscriptions.FirstOrDefaultAsync(user => user.UserId == id)
                                ?? throw new NotFoundException($"User with Id: {id} is not found");
@@ -66,7 +65,7 @@ public class MailingService : IMailingService
         await _context.SaveChangesAsync();
     }
 
-    public async Task UnsubscribeOnMailingAsync(int id)
+    public async Task UnsubscribeAsync(int id)
     {
         var userSubscription = await _context.UserSubscriptions.FirstOrDefaultAsync(user => user.UserId == id)
                                ?? throw new NotFoundException($"User with Id: {id} is not found");
@@ -86,12 +85,12 @@ public class MailingService : IMailingService
         }
     }
 
-    private async Task<List<string>> GetAllUsersEmailAsync()
+    private async Task<List<string>> GetEmailsSubscribedUsersAsync()
     {
         var emailsSubscribedUsers = await _context.Users.
-            Where(user => user.Role == Role.User).
             Include(user => user.Subscription).
             Where(user => user.Subscription.IsSubscribedToEmail).
+            Where(user => user.Role == Role.User).
             Select(user => user.Email).
             ThrowIfEmpty().
             ToListAsync();

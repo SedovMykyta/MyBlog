@@ -6,7 +6,7 @@ public interface IMailingService
 
     public Task SendEmailToSubscribedUsersAsync(string message);
     
-    public Task SubscribeOnMailingAsync(int id);
+    public Task SubscribeAsync(int id);
     
-    public Task UnsubscribeOnMailingAsync(int id);
+    public Task UnsubscribeAsync(int id);
 }
