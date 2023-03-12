@@ -23,7 +23,7 @@ public class MailingService : IMailingService
 
     public async Task SendEmailToSubscribedUsersAsync(string message)
     {
-        var recipientEmails = await GetEmailsSubscribedUsersAsync();
+        var recipientEmails = await GetSubscribedEmailsAsync();
 
         foreach (var email in recipientEmails)
         {
@@ -85,7 +85,7 @@ public class MailingService : IMailingService
         }
     }
 
-    private async Task<List<string>> GetEmailsSubscribedUsersAsync()
+    private async Task<List<string>> GetSubscribedEmailsAsync()
     {
         var emailsSubscribedUsers = await _context.Users.
             Include(user => user.Subscription).

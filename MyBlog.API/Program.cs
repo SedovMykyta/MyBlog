@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MyBlog.Filtres;
+using MyBlog.Filters;
 using MyBlog.Infrastructure;
 using MyBlog.Middlewares.ExceptionHandling;
 using MyBlog.Service.Areas.Articles;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using MyBlog.Service.Exception;
 
-namespace MyBlog.Filtres;
+namespace MyBlog.Filters;
 
 public class ValidationFilter : IAsyncActionFilter
 {
