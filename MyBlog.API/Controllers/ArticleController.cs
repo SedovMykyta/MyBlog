@@ -22,8 +22,7 @@ public class ArticleController : ControllerBase
     public ArticleController(IArticleService articleService, IClaimsParser parse)
     {
         _articleService = articleService;
-        _currentUserJwtInfo = 
-            Task.Run(() => parse.ToJwtInfo(HttpContext.User.Identity as ClaimsIdentity));
+        _currentUserJwtInfo = Task.Run(() => parse.ToJwtInfo(HttpContext.User.Identity as ClaimsIdentity));
     }
 
 

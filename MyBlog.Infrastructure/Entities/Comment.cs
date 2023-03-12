@@ -8,8 +8,8 @@ public class Comment
     public DateTime DateUpdated { get; set; }
     
     public int? UserId { get; set; }
-    public virtual User User { get; set; }
+    public User User { get; set; }
     
     public int ArticleId { get; set; } 
-    public virtual Article Article { get; set; }
+    public Article Article { get; set; }
 }

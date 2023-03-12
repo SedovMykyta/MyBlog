@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Service.Areas.Auth;
+using MyBlog.Service.Areas.Mailing;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 using MyBlog.Service.Areas.Users.Dto;
 
@@ -12,25 +13,30 @@ namespace MyBlog.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IMailingService _mailingService;
     
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IMailingService mailingService)
     {
         _authService = authService;
+        _mailingService = mailingService;
     }
-    
+
     /// <summary>
     /// Register new account
     /// </summary>
     /// <param name="userInput">UserDtoInput object</param>
+    /// <param name="isSubscribeToEmail">bool answer</param>
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
     /// <response code="400">UserWithThisParameterExists</response>
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput)
+    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput, [FromQuery] bool isSubscribeToEmail)
     {
-        await _authService.RegisterAsync(userInput);
+        await _authService.RegisterAsync(userInput, isSubscribeToEmail);
+
+        await _mailingService.SendEmailToUserAsync("You successfully registered on site 'My Blog'.", userInput.Email);
 
         return Ok();
     }

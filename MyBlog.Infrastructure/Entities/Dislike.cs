@@ -8,5 +8,5 @@ public class Dislike
     public virtual User User { get; set; }
     
     public int ArticleId { get; set; } 
-    public virtual Article Article { get; set; } 
+    public Article Article { get; set; } 
 }
