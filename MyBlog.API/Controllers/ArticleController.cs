@@ -19,10 +19,10 @@ public class ArticleController : ControllerBase
     private readonly IArticleService _articleService;
     private readonly Task<JwtInfoDto> _currentUserJwtInfo;
     
-    public ArticleController(IArticleService articleService, IClaimsParser parse)
+    public ArticleController(IArticleService articleService, IClaimsParser parser)
     {
         _articleService = articleService;
-        _currentUserJwtInfo = Task.Run(() => parse.ToJwtInfo(HttpContext.User.Identity as ClaimsIdentity));
+        _currentUserJwtInfo = Task.Run(() => parser.ToJwtInfo(HttpContext.User.Identity as ClaimsIdentity));
     }
 
 
