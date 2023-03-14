@@ -15,6 +15,7 @@ using MyBlog.Service.Areas.Articles.AutoMapper;
 using MyBlog.Service.Areas.Auth;
 using MyBlog.Service.Areas.Mailing;
 using MyBlog.Service.Areas.Mailing.Models;
+using MyBlog.Service.Areas.Rating;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper;
 using MyBlog.Service.Areas.Users.Validators;
@@ -41,6 +42,7 @@ builder.Services.AddTransient<IPasswordManager, PasswordManager>();
 builder.Services.AddTransient<IArticleService, ArticleService>();
 builder.Services.AddTransient<IClaimsParser, ClaimsParser>();
 builder.Services.AddTransient<IMailingService, MailingService>();
+builder.Services.AddTransient<IRatingService, RatingService>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 

@@ -16,4 +16,4 @@ public class ArticleMappingProfile : Profile
             .ForMember(dest => dest.ImageBase64, opt => opt.MapFrom(src => src.Image.ToBase64String()));
         
     }
-}
+} 
