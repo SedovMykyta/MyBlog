@@ -8,8 +8,8 @@ using MyBlog.Service.Helpers.ClaimParser.Dto;
 
 namespace MyBlog.Controllers;
 
-[Route("api/feedback")]
 [ApiController]
+[Route("api/feedback")]
 [Authorize]
 [Produces(MediaTypeNames.Application.Json)]
 public class FeedbackController : ControllerBase
