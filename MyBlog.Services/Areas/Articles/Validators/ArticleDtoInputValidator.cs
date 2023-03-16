@@ -2,7 +2,7 @@ using FluentValidation;
 using MyBlog.Service.Areas.Articles.AutoMapper.Dto;
 using MyBlog.Service.Exception;
 
-namespace MyBlog.Service.Areas.Articles.AutoMapper.Validators;
+namespace MyBlog.Service.Areas.Articles.Validators;
 
 public class ArticleDtoInputValidator: AbstractValidator<ArticleDtoInput>
 {

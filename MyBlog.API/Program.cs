@@ -13,6 +13,8 @@ using MyBlog.Middlewares.ExceptionHandling;
 using MyBlog.Service.Areas.Articles;
 using MyBlog.Service.Areas.Articles.AutoMapper;
 using MyBlog.Service.Areas.Auth;
+using MyBlog.Service.Areas.Comments;
+using MyBlog.Service.Areas.Comments.AutoMapper;
 using MyBlog.Service.Areas.Mailing;
 using MyBlog.Service.Areas.Mailing.Models;
 using MyBlog.Service.Areas.Rating;
@@ -43,10 +45,11 @@ builder.Services.AddTransient<IArticleService, ArticleService>();
 builder.Services.AddTransient<IClaimsParser, ClaimsParser>();
 builder.Services.AddTransient<IMailingService, MailingService>();
 builder.Services.AddTransient<IRatingService, RatingService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 
-builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile));
+builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile), typeof(CommentMappingProfile));
 
 builder.Services.AddSingleton<UserDtoInputValidator>();
 

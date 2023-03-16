@@ -8,8 +8,8 @@ using MyBlog.Service.Helpers.ClaimParser.Dto;
 
 namespace MyBlog.Controllers;
 
-[Route("api/mailing")]
 [ApiController]
+[Route("api/mailing")]
 [Authorize]
 [Produces(MediaTypeNames.Application.Json)]
 public class MailingController : ControllerBase

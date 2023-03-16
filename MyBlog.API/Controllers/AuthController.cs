@@ -7,8 +7,8 @@ using MyBlog.Service.Areas.Users.Dto;
 
 namespace MyBlog.Controllers;
 
-[Route("api/auth")]
 [ApiController]
+[Route("api/auth")]
 [Produces(MediaTypeNames.Application.Json)]
 public class AuthController : ControllerBase
 {

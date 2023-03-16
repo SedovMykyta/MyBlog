@@ -137,7 +137,7 @@ public class ArticleService : IArticleService
     {
         if (articleUserId != userToken.Id && userToken.Role != "Admin")
         {
-            throw new BadRequestException("You can`t delete this article");
+            throw new BadRequestException("You can`t access to this article");
         };
     }
 }
