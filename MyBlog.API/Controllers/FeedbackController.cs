@@ -34,10 +34,10 @@ public class FeedbackController : ControllerBase
     /// <returns>Returns OK</returns>
     /// <response code="200">Success</response>
     /// <response code="404">ArticleNotFound</response>
-    [HttpPost ("like")]
+    [HttpPost ("like/{articleId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> LikeByIdAsync([FromForm] int articleId)
+    public async Task<IActionResult> LikeArticleByIdAsync([FromRoute] int articleId)
     {
         await _ratingService.LikeByIdAsync(articleId, _currentUserJwtInfo.Result.Id);
         
@@ -51,10 +51,10 @@ public class FeedbackController : ControllerBase
     /// <returns>Returns OK</returns>
     /// <response code="200">Success</response>
     /// <response code="404">ArticleNotFound</response>
-    [HttpPost ("dislike")]
+    [HttpPost ("dislike/{articleId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DislikeByIdAsync([FromForm] int articleId)
+    public async Task<IActionResult> DislikeArticleByIdAsync([FromRoute] int articleId)
     {
         await _ratingService.DislikeByIdAsync(articleId, _currentUserJwtInfo.Result.Id);
         
@@ -66,12 +66,10 @@ public class FeedbackController : ControllerBase
     /// </summary>
     /// <returns>Returns CommentDto list</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(List<CommentDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetListAsync()
+    public async Task<IActionResult> GetListCommentAsync()
     {
         var comments = await _commentService.GetListAsync();
 
@@ -81,13 +79,12 @@ public class FeedbackController : ControllerBase
     /// <summary>
     /// Get list of Comments by article id
     /// </summary>
+    /// <param name="articleId">Article id</param>
     /// <returns>Returns CommentDto list</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet("articleId/{articleId:int}")]
     [ProducesResponseType(typeof(List<CommentDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetListByIdArticleAsync([FromRoute] int articleId)
+    public async Task<IActionResult> GetListCommentByArticleIdAsync([FromRoute] int articleId)
     {
         var comments = await _commentService.GetListByIdArticleAsync(articleId);
 
@@ -97,22 +94,22 @@ public class FeedbackController : ControllerBase
     /// <summary>
     /// Get Comment by id
     /// </summary>
-    /// <param name="id">Comment id</param>
+    /// <param name="commentId">Comment id</param>
     /// <returns>Returns CommentDto</returns>
     /// <response code="200">Success</response>
     /// <response code="404">CommentNotFound</response>
-    [HttpGet("{id:int}")]
+    [HttpGet("{commentId:int}")]
     [ProducesResponseType(typeof(CommentDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+    public async Task<IActionResult> GetCommentByIdAsync([FromRoute] int commentId)
     {
-        var comment = await _commentService.GetByIdAsync(id);
+        var comment = await _commentService.GetByIdAsync(commentId);
 
         return Ok(comment);
     }
 
     /// <summary>
-    /// Create Article
+    /// Create Comment
     /// </summary>
     /// <param name="commentInput">CommentInputDto object</param>
     /// <returns>Created CommentDto object</returns>
@@ -121,7 +118,7 @@ public class FeedbackController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(CommentDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> CreateAsync([FromForm] CommentInputDto commentInput)
+    public async Task<IActionResult> CreateCommentAsync([FromForm] CommentInputDto commentInput)
     {
         var comment = await _commentService.CreateAsync(commentInput, _currentUserJwtInfo.Result);
 
@@ -131,19 +128,19 @@ public class FeedbackController : ControllerBase
     /// <summary>
     /// Update Comment by id
     /// </summary>
-    /// <param name="id">Comment id</param>
+    /// <param name="commentId">Comment id</param>
     /// <param name="commentInput">CommentInputDto object</param>
     /// <returns>Updated CommentDto object</returns>
     /// <response code="200">Success</response>
     /// <response code="400">NotAccess</response>
     /// <response code="404">CommentNotFound</response>
-    [HttpPut ("{id:int}")]
+    [HttpPut ("{commentId:int}")]
     [ProducesResponseType(typeof(CommentDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromForm] CommentInputDto commentInput)
+    public async Task<IActionResult> UpdateCommentByIdAsync([FromRoute] int commentId, [FromForm] CommentInputDto commentInput)
     {
-        var comment = await _commentService.UpdateByIdAsync(id, commentInput, _currentUserJwtInfo.Result);
+        var comment = await _commentService.UpdateByIdAsync(commentId, commentInput, _currentUserJwtInfo.Result);
 
         return Ok(comment);
     }
@@ -151,17 +148,17 @@ public class FeedbackController : ControllerBase
     /// <summary>
     /// Delete Comment by id
     /// </summary>
-    /// <param name="id">Comment id</param>
+    /// <param name="commentId">Comment id</param>
     /// <response code="200">Success</response>
     /// <response code="400">NotAccess</response>
     /// <response code="404">CommentNotFound</response>
-    [HttpDelete ("{id:int}")]
+    [HttpDelete ("{commentId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteByIdAsync([FromRoute] int id)
+    public async Task<IActionResult> DeleteCommentByIdAsync([FromRoute] int commentId)
     {
-        await _commentService.DeleteByIdAsync(id, _currentUserJwtInfo.Result);
+        await _commentService.DeleteByIdAsync(commentId, _currentUserJwtInfo.Result);
 
         return Ok();
     }

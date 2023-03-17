@@ -31,10 +31,8 @@ public class ArticleController : ControllerBase
     /// </summary>
     /// <returns>Returns ArticleDto list</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet]
     [ProducesResponseType(typeof(List<ArticleDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetListAsync()
     {
         var articles = await _articleService.GetListAsync();
@@ -83,10 +81,8 @@ public class ArticleController : ControllerBase
     /// <param name="topic">Theme article</param>
     /// <returns>Returns ArticlesDto</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet("topic/{topic}")]
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByTopicAsync([FromForm] Topic topic)
     {
         var articles = await _articleService.GetByTopicAsync(topic);
@@ -100,7 +96,7 @@ public class ArticleController : ControllerBase
     /// <param name="title">Title article</param>
     /// <returns>Returns ArticlesDto</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">TitleNotFound</response>
+    /// <response code="404">TitleIsNotFound</response>
     [HttpGet("title/{title}")]
     [ProducesResponseType(typeof(List<ArticleDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -24,7 +24,6 @@ public class CommentService : ICommentService
     {
         var comments = await _context.Comments
             .Select(comment => _mapper.Map<CommentDto>(comment))
-            .ThrowIfEmpty()
             .ToListAsync();
 
         return comments;
@@ -35,7 +34,6 @@ public class CommentService : ICommentService
         var comments = await _context.Comments
             .Where(comment => comment.ArticleId == articleId)
             .Select(comment => _mapper.Map<CommentDto>(comment))
-            .ThrowIfEmpty()
             .ToListAsync();
 
         return comments;
@@ -70,7 +68,7 @@ public class CommentService : ICommentService
     {
         var comment = await GetCommentByIdAsync(id);
         
-        ThrowIfUserNotHasNotEditAccess(id, userToken);
+        ThrowIfUserCannotToEditAccess(id, userToken);
 
         _mapper.Map(commentInput, comment);
 
@@ -86,7 +84,7 @@ public class CommentService : ICommentService
     {
         var comment = await GetCommentByIdAsync(id);
         
-        ThrowIfUserNotHasNotEditAccess(id, userToken);
+        ThrowIfUserCannotToEditAccess(id, userToken);
 
         _context.Comments.Remove(comment);
         await _context.SaveChangesAsync();
@@ -101,7 +99,7 @@ public class CommentService : ICommentService
         return comment;
     }
 
-    private void ThrowIfUserNotHasNotEditAccess(int commentUserId, JwtInfoDto userToken)
+    private void ThrowIfUserCannotToEditAccess(int commentUserId, JwtInfoDto userToken)
     {
         if (commentUserId != userToken.Id && userToken.Role != "Admin")
         {
@@ -113,7 +111,7 @@ public class CommentService : ICommentService
     {
         if (! await _context.Articles.AnyAsync(article => article.Id == articleId))
         {
-            throw new NotFoundException($"Article with Id: {articleId} not found");
+            throw new NotFoundException($"Article with Id: {articleId} is not found");
         }
     }
 }

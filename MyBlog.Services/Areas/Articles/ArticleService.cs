@@ -25,7 +25,6 @@ public class ArticleService : IArticleService
     {
         var articles = await _context.Articles
             .Select(article => _mapper.Map<ArticleDto>(article))
-            .ThrowIfEmpty()
             .ToListAsync();
 
         return articles;
@@ -45,7 +44,6 @@ public class ArticleService : IArticleService
         var articles = await _context.Articles
             .Where(article => article.UserId == userId)
             .Select(article => _mapper.Map<ArticleDto>(article))
-            .ThrowIfEmpty()
             .ToListAsync();
 
         return articles;
@@ -56,7 +54,6 @@ public class ArticleService : IArticleService
         var articles = await _context.Articles
             .Where(article => article.Topic == topic)
             .Select(article => _mapper.Map<ArticleDto>(article))
-            .ThrowIfEmpty()
             .ToListAsync();
 
         return articles;
@@ -67,7 +64,6 @@ public class ArticleService : IArticleService
         var articles = await _context.Articles
             .Where(article => article.Title.Contains(title) || title.Contains(article.Title))
             .Select(article => _mapper.Map<ArticleDto>(article))
-            .ThrowIfEmpty()
             .ToListAsync();
 
         return articles;
@@ -93,7 +89,7 @@ public class ArticleService : IArticleService
     {
         var article = await GetArticleByIdAsync(id);
 
-        ThrowIfUserHasNotEditAccess(article.UserId, userToken);
+        ThrowIfUserCannotEditAccess(article.UserId, userToken);
         await ThrowIfTitleExistAsync(articleInput.Title, article.Id);
         
         _mapper.Map(articleInput, article);
@@ -110,7 +106,7 @@ public class ArticleService : IArticleService
     {
         var article = await GetArticleByIdAsync(id);
 
-        ThrowIfUserHasNotEditAccess(article.UserId, userToken);
+        ThrowIfUserCannotEditAccess(article.UserId, userToken);
         
         _context.Articles.Remove(article);
         await _context.SaveChangesAsync();
@@ -120,7 +116,7 @@ public class ArticleService : IArticleService
     private async Task<Article> GetArticleByIdAsync(int id)
     {
         var article = await _context.Articles.FirstOrDefaultAsync(article => article.Id == id) 
-                      ?? throw new NotFoundException($"Article with Id: {id} is not found");
+                      ?? throw new NotFoundException($"Article with Id: {id} not found");
 
         return article;
     }
@@ -133,11 +129,11 @@ public class ArticleService : IArticleService
         }
     }
     
-    private void ThrowIfUserHasNotEditAccess(int articleUserId, JwtInfoDto userToken)
+    private void ThrowIfUserCannotEditAccess(int articleUserId, JwtInfoDto userToken)
     {
         if (articleUserId != userToken.Id && userToken.Role != "Admin")
         {
-            throw new BadRequestException("You can`t access to this article");
+            throw new BadRequestException("You do not have permission");
         };
     }
 }

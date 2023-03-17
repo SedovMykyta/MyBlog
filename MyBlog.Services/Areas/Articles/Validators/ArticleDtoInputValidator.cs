@@ -11,10 +11,10 @@ public class ArticleDtoInputValidator: AbstractValidator<ArticleDtoInput>
     public ArticleDtoInputValidator()
     {
         RuleFor(article => article.Title)
-            .Length(6, 100).WithMessage("Length must be between 6 characters and 100");
+            .Length(6, 100).WithMessage("Length must be between 6 and 100 characters");
         
         RuleFor(article => article.Description)
-            .Length(10, 150).WithMessage("Length must be between 10 characters and 150");
+            .Length(10, 150).WithMessage("Length must be between 10 and 150 characters");
         
         RuleFor(article => article.FullText)
             .MinimumLength(100).WithMessage("Length must be 100 characters and more");

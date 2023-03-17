@@ -18,7 +18,7 @@ public class RatingService : IRatingService
     
     public async Task LikeByIdAsync(int articleId, int userId)
     {
-        await ThrowIfArticleIsNotExist(articleId);
+        await ThrowIfArticleNotExist(articleId);
 
         var like = await GetLikeAsync(articleId, userId);
         if (like != null)
@@ -39,7 +39,7 @@ public class RatingService : IRatingService
 
     public async Task DislikeByIdAsync(int articleId, int userId)
     {
-        await ThrowIfArticleIsNotExist(articleId);
+        await ThrowIfArticleNotExist(articleId);
 
         var dislike = await GetDislikeAsync(articleId, userId);
         if (dislike != null)
@@ -58,7 +58,7 @@ public class RatingService : IRatingService
         await _context.SaveChangesAsync();
     }
 
-    private async Task ThrowIfArticleIsNotExist(int id)
+    private async Task ThrowIfArticleNotExist(int id)
     {
         await _articleService.GetByIdAsync(id);
     }
