@@ -57,7 +57,7 @@ public class MailingService : IMailingService
     public async Task SubscribeAsync(int id)
     {
         var userSubscription = await _context.UserSubscriptions.FirstOrDefaultAsync(user => user.UserId == id)
-                               ?? throw new NotFoundException($"User with Id: {id} is not found");
+                               ?? throw new NotFoundException($"User with Id: {id} not found");
 
         userSubscription.IsSubscribedToEmail = true;
 
@@ -68,7 +68,7 @@ public class MailingService : IMailingService
     public async Task UnsubscribeAsync(int id)
     {
         var userSubscription = await _context.UserSubscriptions.FirstOrDefaultAsync(user => user.UserId == id)
-                               ?? throw new NotFoundException($"User with Id: {id} is not found");
+                               ?? throw new NotFoundException($"User with Id: {id} not found");
 
         userSubscription.IsSubscribedToEmail = false;
 
@@ -81,7 +81,7 @@ public class MailingService : IMailingService
     {
         if (!await _context.Users.AnyAsync(user => user.Email == email))
         {
-            throw new NotFoundException($"Email: {email} is not found in DB");
+            throw new NotFoundException($"Email: {email} not found in DB");
         }
     }
 
@@ -92,7 +92,6 @@ public class MailingService : IMailingService
             Where(user => user.Subscription.IsSubscribedToEmail).
             Where(user => user.Role == Role.User).
             Select(user => user.Email).
-            ThrowIfEmpty().
             ToListAsync();
 
         return emailsSubscribedUsers;

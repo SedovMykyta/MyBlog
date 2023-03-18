@@ -10,8 +10,8 @@ using MyBlog.Service.Helpers.ClaimParser.Dto;
 
 namespace MyBlog.Controllers;
 
-[Route("api/article")]
 [ApiController]
+[Route("api/article")]
 [Authorize]
 [Produces(MediaTypeNames.Application.Json)]
 public class ArticleController : ControllerBase
@@ -31,10 +31,8 @@ public class ArticleController : ControllerBase
     /// </summary>
     /// <returns>Returns ArticleDto list</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet]
     [ProducesResponseType(typeof(List<ArticleDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetListAsync()
     {
         var articles = await _articleService.GetListAsync();
@@ -70,7 +68,7 @@ public class ArticleController : ControllerBase
     [HttpGet("userId/{id:int}")]
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByUserIdAsync([FromForm] int id)
+    public async Task<IActionResult> GetByUserIdAsync([FromRoute] int id)
     {
         var articles = await _articleService.GetByUserIdAsync(id);
 
@@ -83,10 +81,8 @@ public class ArticleController : ControllerBase
     /// <param name="topic">Theme article</param>
     /// <returns>Returns ArticlesDto</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet("topic/{topic}")]
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByTopicAsync([FromForm] Topic topic)
     {
         var articles = await _articleService.GetByTopicAsync(topic);
@@ -100,7 +96,7 @@ public class ArticleController : ControllerBase
     /// <param name="title">Title article</param>
     /// <returns>Returns ArticlesDto</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">TitleNotFound</response>
+    /// <response code="404">TitleIsNotFound</response>
     [HttpGet("title/{title}")]
     [ProducesResponseType(typeof(List<ArticleDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -135,7 +131,7 @@ public class ArticleController : ControllerBase
     /// <param name="articleInput">ArticleDtoInput object</param>
     /// <returns>Updated ArticleDto object</returns>
     /// <response code="200">Success</response>
-    /// <response code="400">TitleExists</response>
+    /// <response code="400">TitleExists, NotAccess</response>
     /// <response code="404">UserNotFound</response>
     [HttpPut ("{id:int}")]
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
@@ -153,9 +149,11 @@ public class ArticleController : ControllerBase
     /// </summary>
     /// <param name="id">Article id</param>
     /// <response code="200">Success</response>
+    /// <response code="400">NotAccess</response>
     /// <response code="404">ArticleNotFound</response>
     [HttpDelete ("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteByIdAsync([FromRoute] int id)
     {

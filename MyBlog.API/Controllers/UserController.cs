@@ -24,10 +24,8 @@ public class UserController : ControllerBase
     /// </summary>
     /// <returns>Returns UserDto list</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">CollectionIsEmpty</response>
     [HttpGet]
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetListAsync()
     {
         var users = await _userService.GetListAsync();

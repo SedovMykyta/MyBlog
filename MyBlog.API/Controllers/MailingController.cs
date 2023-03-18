@@ -8,8 +8,8 @@ using MyBlog.Service.Helpers.ClaimParser.Dto;
 
 namespace MyBlog.Controllers;
 
-[Route("api/mailing")]
 [ApiController]
+[Route("api/mailing")]
 [Authorize]
 [Produces(MediaTypeNames.Application.Json)]
 public class MailingController : ControllerBase
@@ -48,11 +48,9 @@ public class MailingController : ControllerBase
     /// <param name="message">Message</param>
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
-    /// <response code="404">NotSubscribedUsers</response>
     [HttpPost ("toSubscribed")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> SendEmailToSubscribedUsersAsync([FromForm] string message)
     {
         await _mailingService.SendEmailToSubscribedUsersAsync(message);

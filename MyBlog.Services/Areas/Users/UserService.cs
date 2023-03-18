@@ -27,7 +27,6 @@ public class UserService : IUserService
     {
         var users = await _context.Users
             .Select(user => _mapper.Map<UserDto>(user))
-            .ThrowIfEmpty()
             .ToListAsync();
         
         return users;
@@ -103,7 +102,7 @@ public class UserService : IUserService
     private async Task<User> GetUserByIdAsync(int id)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id) 
-                   ?? throw new NotFoundException($"User with Id: {id} is not found");
+                   ?? throw new NotFoundException($"User with Id: {id} not found");
 
         return user;
     }
@@ -111,7 +110,7 @@ public class UserService : IUserService
     private async Task<User> GetUserByEmailAsync(string email)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == email)
-                   ?? throw new NotFoundException($"User with Email: {email} is not found");
+                   ?? throw new NotFoundException($"User with Email: {email} not found");
 
         return user;
     }
