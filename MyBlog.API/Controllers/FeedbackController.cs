@@ -69,7 +69,7 @@ public class FeedbackController : ControllerBase
     [HttpGet]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(List<CommentDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetListCommentAsync()
+    public async Task<IActionResult> GetCommentListAsync()
     {
         var comments = await _commentService.GetListAsync();
 
@@ -84,9 +84,9 @@ public class FeedbackController : ControllerBase
     /// <response code="200">Success</response>
     [HttpGet("articleId/{articleId:int}")]
     [ProducesResponseType(typeof(List<CommentDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetListCommentByArticleIdAsync([FromRoute] int articleId)
+    public async Task<IActionResult> GetCommentListByArticleIdAsync([FromRoute] int articleId)
     {
-        var comments = await _commentService.GetListByIdArticleAsync(articleId);
+        var comments = await _commentService.GetListByArticleIdAsync(articleId);
 
         return Ok(comments);
     }

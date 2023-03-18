@@ -7,7 +7,7 @@ public interface ICommentService
 {
     public Task<List<CommentDto>> GetListAsync();
     
-    public Task<List<CommentDto>> GetListByIdArticleAsync(int articleId);
+    public Task<List<CommentDto>> GetListByArticleIdAsync(int articleId);
 
     public Task<CommentDto> GetByIdAsync(int id);
 

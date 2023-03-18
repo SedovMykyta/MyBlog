@@ -29,7 +29,7 @@ public class CommentService : ICommentService
         return comments;
     }
 
-    public async Task<List<CommentDto>> GetListByIdArticleAsync(int articleId)
+    public async Task<List<CommentDto>> GetListByArticleIdAsync(int articleId)
     {
         var comments = await _context.Comments
             .Where(comment => comment.ArticleId == articleId)
