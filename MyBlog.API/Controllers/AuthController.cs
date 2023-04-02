@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Register new account
     /// </summary>
-    /// <param name="userInput">UserDtoInput object</param>
+    /// <param name="userInput">UserInputDtoDto object</param>
     /// <param name="isSubscribeToEmail">bool answer</param>
     /// <returns>Returns Ok</returns>
     /// <response code="200">Success</response>
@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RegisterAsync([FromForm] UserDtoInput userInput, [FromQuery] bool isSubscribeToEmail)
+    public async Task<IActionResult> RegisterAsync([FromForm] UserInputDto userInput, [FromQuery] bool isSubscribeToEmail)
     {
         await _authService.RegisterAsync(userInput, isSubscribeToEmail);
 
@@ -45,7 +45,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Login in account
     /// </summary>
-    /// <param name="userLogin">UserDtoLogin object</param>
+    /// <param name="userLogin">UserLoginDtoDto object</param>
     /// <returns>Returns JWT token</returns>
     /// <response code="200">Success</response>
     /// <response code="400">BadRequest</response>
@@ -54,7 +54,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> LoginAsync([FromForm] UserDtoLogin userLogin)
+    public async Task<IActionResult> LoginAsync([FromForm] UserLoginDto userLogin)
     {
         var token = await _authService.LoginAsync(userLogin);
 

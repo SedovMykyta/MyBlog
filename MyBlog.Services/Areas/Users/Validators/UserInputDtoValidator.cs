@@ -3,9 +3,9 @@ using MyBlog.Service.Areas.Users.AutoMapper.Dto;
 
 namespace MyBlog.Service.Areas.Users.Validators;
 
-public class UserDtoInputValidator : AbstractValidator<UserDtoInput>
+public class UserInputDtoValidator : AbstractValidator<UserInputDto>
 {
-    public UserDtoInputValidator()
+    public UserInputDtoValidator()
     {
         RuleFor(user => user.FirstName)
             .Length(2, 30).WithMessage("Length must be between 2 and 30 characters")

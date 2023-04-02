@@ -28,7 +28,7 @@ public class AuthService : IAuthService
         _context = context;
     }
 
-    public async Task RegisterAsync(UserDtoInput userInput, bool isSubscribeToEmail)
+    public async Task RegisterAsync(UserInputDto userInput, bool isSubscribeToEmail)
     {
          var userDto = await _userService.CreateAsync(userInput);
 
@@ -42,7 +42,7 @@ public class AuthService : IAuthService
          await _context.SaveChangesAsync();
     }
 
-    public async Task<string> LoginAsync(UserDtoLogin userLogin)
+    public async Task<string> LoginAsync(UserLoginDto userLogin)
     {
         var user = await AuthenticateAsync(userLogin);
 
@@ -51,7 +51,7 @@ public class AuthService : IAuthService
         return token;
     }
 
-    private async Task<User> AuthenticateAsync(UserDtoLogin userLogin)
+    private async Task<User> AuthenticateAsync(UserLoginDto userLogin)
     {
         var user = await _userService.GetByLoginAsync(userLogin);
         if (userLogin.Password != _passwordManager.Decrypt(user.Password))

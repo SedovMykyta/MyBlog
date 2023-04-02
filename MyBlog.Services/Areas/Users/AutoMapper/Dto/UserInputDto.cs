@@ -1,6 +1,6 @@
 ﻿namespace MyBlog.Service.Areas.Users.AutoMapper.Dto;
 
-public class UserDtoInput
+public class UserInputDto
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

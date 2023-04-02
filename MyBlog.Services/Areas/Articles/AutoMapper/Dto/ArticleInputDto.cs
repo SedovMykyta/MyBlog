@@ -3,7 +3,7 @@ using MyBlog.Infrastructure.Entities.Enum;
 
 namespace MyBlog.Service.Areas.Articles.AutoMapper.Dto;
 
-public class ArticleDtoInput
+public class ArticleInputDto
 {
     public string Title { get; set; }
     public string Description { get; set; }

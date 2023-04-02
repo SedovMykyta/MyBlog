@@ -9,6 +9,6 @@ public class UserMappingProfile : Profile
     public UserMappingProfile()
     {
         CreateMap<User, UserDto>();
-        CreateMap<UserDtoInput, User>();
+        CreateMap<UserInputDto, User>();
     }
 }

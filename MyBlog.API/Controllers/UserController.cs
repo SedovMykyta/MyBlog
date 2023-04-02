@@ -71,14 +71,14 @@ public class UserController : ControllerBase
     /// <summary>
     /// Create User
     /// </summary>
-    /// <param name="userInput">UserDtoInput object</param>
+    /// <param name="userInput">UserInputDto object</param>
     /// <returns>Created UserDto object</returns>
     /// <response code="200">Success</response>
     /// <response code="400">EmailOrPhoneExists</response>
     [HttpPost]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromForm] UserDtoInput userInput)
+    public async Task<IActionResult> CreateAsync([FromForm] UserInputDto userInput)
     {
         var userDto = await _userService.CreateAsync(userInput);
 
@@ -89,7 +89,7 @@ public class UserController : ControllerBase
     /// Update User by id
     /// </summary>
     /// <param name="id">User id</param>
-    /// <param name="userInput">UserDtoInput object</param>
+    /// <param name="userInput">UserInputDto object</param>
     /// <returns>Updated UserDto object</returns>
     /// <response code="200">Success</response>
     /// <response code="400">EmailOrPhoneExists</response>
@@ -98,7 +98,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromForm] UserDtoInput userInput)
+    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromForm] UserInputDto userInput)
     {
         var userDto = await _userService.UpdateByIdAsync(id, userInput);
 
