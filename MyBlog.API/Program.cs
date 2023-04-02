@@ -23,14 +23,14 @@ using MyBlog.Service.Areas.Users.AutoMapper;
 using MyBlog.Service.Areas.Users.Validators;
 using MyBlog.Service.Helpers.PasswordManagers;
 using MyBlog.Service.Helpers.ClaimParser;
+using MyBlog.Service.Helpers.ConfigurationParser;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(config => config.Filters.Add<ValidationFilter>());
 
-builder.Services.AddDbContext<MyBlogContext>(
-        options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyBlogDatabase")));
-
+builder.Services.AddDbContext<MyBlogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyBlogDatabase")));
 builder.Services.AddValidatorsFromAssemblyContaining<UserInputDtoValidator>();
 builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true)
     .AddFluentValidationAutoValidation(); 
@@ -46,8 +46,7 @@ builder.Services.AddTransient<IClaimsParser, ClaimsParser>();
 builder.Services.AddTransient<IMailingService, MailingService>();
 builder.Services.AddTransient<IRatingService, RatingService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
-
-builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+builder.Services.AddTransient<IMailingParser, MailingParser>();
 
 builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile), typeof(CommentMappingProfile));
 
@@ -87,6 +86,7 @@ builder.Services.AddSwaggerGen(config =>
         Description = "Bearer Authentication with JWT Token",
         Type = SecuritySchemeType.Http
     });
+    
     config.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {

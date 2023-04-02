@@ -5,7 +5,7 @@ using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Comments.AutoMapper.Dto;
 using MyBlog.Service.Exception;
 using MyBlog.Service.Helpers.ClaimParser.Dto;
-using MyBlog.Service.Helpers.ExtensionMethods;
+using static MyBlog.Service.ServiceUtilities;
 
 namespace MyBlog.Service.Areas.Comments;
 
@@ -54,7 +54,7 @@ public class CommentService : ICommentService
         
         var comment = _mapper.Map<Comment>(commentInput);
 
-        comment.UserId = userToken.Id;
+        comment.UserId = userToken.UserId;
 
         await _context.Comments.AddAsync(comment);
         await _context.SaveChangesAsync();
@@ -68,7 +68,7 @@ public class CommentService : ICommentService
     {
         var comment = await GetCommentByIdAsync(id);
         
-        ThrowIfUserCannotToEditAccess(id, userToken);
+        ThrowIfUserCannotEditAccess(id, userToken);
 
         _mapper.Map(commentInput, comment);
 
@@ -84,7 +84,7 @@ public class CommentService : ICommentService
     {
         var comment = await GetCommentByIdAsync(id);
         
-        ThrowIfUserCannotToEditAccess(id, userToken);
+        ThrowIfUserCannotEditAccess(id, userToken);
 
         _context.Comments.Remove(comment);
         await _context.SaveChangesAsync();
@@ -97,14 +97,6 @@ public class CommentService : ICommentService
                       ?? throw new NotFoundException($"Comment with Id: {id} not found");
 
         return comment;
-    }
-
-    private void ThrowIfUserCannotToEditAccess(int commentUserId, JwtInfoDto userToken)
-    {
-        if (commentUserId != userToken.Id && userToken.Role != "Admin")
-        {
-            throw new BadRequestException("You can`t access to comment");
-        };
     }
 
     private async Task ThrowIfArticleNotFound(int articleId)

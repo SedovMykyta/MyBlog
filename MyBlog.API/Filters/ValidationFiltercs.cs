@@ -9,12 +9,12 @@ public class ValidationFilter : IAsyncActionFilter
     {
         if (! context.ModelState.IsValid)
         {
-            var fieldErrors = context.ModelState
+            var errorFields = context.ModelState
                 .Where(keyValuePair => keyValuePair.Value!.Errors.Count > 0)
                 .ToDictionary(key => key.Key,
                     value => string.Join(". ", value.Value!.Errors.Select(modelError => modelError.ErrorMessage)));
             
-            throw new ValidationErrorException(fieldErrors);
+            throw new ValidationErrorException(errorFields);
         }
     
         await next();

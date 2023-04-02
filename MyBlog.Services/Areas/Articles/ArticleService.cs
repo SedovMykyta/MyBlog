@@ -6,7 +6,7 @@ using MyBlog.Infrastructure.Entities.Enum;
 using MyBlog.Service.Areas.Articles.AutoMapper.Dto;
 using MyBlog.Service.Exception;
 using MyBlog.Service.Helpers.ClaimParser.Dto;
-using MyBlog.Service.Helpers.ExtensionMethods;
+using static MyBlog.Service.ServiceUtilities;
 
 namespace MyBlog.Service.Areas.Articles;
 
@@ -75,7 +75,7 @@ public class ArticleService : IArticleService
         
         var article = _mapper.Map<Article>(articleInput);
 
-        article.UserId = userToken.Id;
+        article.UserId = userToken.UserId;
         
         await _context.Articles.AddAsync(article);
         await _context.SaveChangesAsync();
@@ -127,13 +127,5 @@ public class ArticleService : IArticleService
         {
             throw new BadRequestException($"Article with Title: {title} exists");
         }
-    }
-    
-    private void ThrowIfUserCannotEditAccess(int articleUserId, JwtInfoDto userToken)
-    {
-        if (articleUserId != userToken.Id && userToken.Role != "Admin")
-        {
-            throw new BadRequestException("You do not have permission");
-        };
     }
 }

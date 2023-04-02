@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBlog.Infrastructure;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
-using MyBlog.Service.Areas.Users.Dto;
 using MyBlog.Service.Exception;
-using MyBlog.Service.Helpers.ExtensionMethods;
 using MyBlog.Service.Helpers.PasswordManagers;
 
 namespace MyBlog.Service.Areas.Users;
@@ -120,17 +118,9 @@ public class UserService : IUserService
         var isEmailBusy = await _context.Users.AnyAsync(user => user.Email == userInput.Email && user.Id != id);
         var isPhoneBusy = await _context.Users.AnyAsync(user => user.Phone == userInput.Phone && user.Id != id);
 
-        if (isEmailBusy && isPhoneBusy)
+        if (isEmailBusy || isPhoneBusy)
         {
-            throw new BadRequestException($"User with this email and phone exist");
-        }
-        if (isEmailBusy)
-        {
-            throw new BadRequestException($"User with this email exist");
-        }
-        if (isPhoneBusy)
-        {
-            throw new BadRequestException($"User with this phone exist");
+            throw new BadRequestException("User with same email or phone is already exist");
         }
     }
 }

@@ -10,8 +10,8 @@ public class CommentMappingProfile : Profile
     {
         CreateMap<Comment, CommentDto>();
         CreateMap<CommentInputDto, Comment>()
-            .ForMember(comment => comment.DateUpdated,
-                memberOptions => memberOptions.MapFrom(dateUpdated => DateTime.UtcNow));
+            .ForMember(comment => 
+                comment.UpdatedDate, memberOptions => memberOptions.MapFrom(dateUpdated => DateTime.UtcNow));
 
     }
 }

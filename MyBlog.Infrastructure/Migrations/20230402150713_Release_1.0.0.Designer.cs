@@ -12,8 +12,8 @@ using MyBlog.Infrastructure;
 namespace MyBlog.Infrastructure.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20230303233254_Fixed foreigh key in comment, dislike, like")]
-    partial class Fixedforeighkeyincommentdislikelike
+    [Migration("20230402150713_Release_1.0.0")]
+    partial class Release100
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,10 +33,7 @@ namespace MyBlog.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateCreate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -57,6 +54,9 @@ namespace MyBlog.Infrastructure.Migrations
 
                     b.Property<int>("Topic")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -79,15 +79,15 @@ namespace MyBlog.Infrastructure.Migrations
                     b.Property<int>("ArticleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateCreated")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Text")
+                    b.Property<string>("Data")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -155,7 +155,7 @@ namespace MyBlog.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateCreateAccount")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -184,6 +184,28 @@ namespace MyBlog.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MyBlog.Infrastructure.Entities.UserSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsSubscribedToEmail")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("MyBlog.Infrastructure.Entities.Article", b =>
@@ -248,6 +270,17 @@ namespace MyBlog.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MyBlog.Infrastructure.Entities.UserSubscription", b =>
+                {
+                    b.HasOne("MyBlog.Infrastructure.Entities.User", "User")
+                        .WithOne("Subscription")
+                        .HasForeignKey("MyBlog.Infrastructure.Entities.UserSubscription", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MyBlog.Infrastructure.Entities.Article", b =>
                 {
                     b.Navigation("Comments");
@@ -266,6 +299,9 @@ namespace MyBlog.Infrastructure.Migrations
                     b.Navigation("Dislikes");
 
                     b.Navigation("Likes");
+
+                    b.Navigation("Subscription")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

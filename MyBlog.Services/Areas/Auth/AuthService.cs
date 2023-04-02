@@ -7,7 +7,6 @@ using MyBlog.Infrastructure;
 using MyBlog.Infrastructure.Entities;
 using MyBlog.Service.Areas.Users;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
-using MyBlog.Service.Areas.Users.Dto;
 using MyBlog.Service.Exception;
 using MyBlog.Service.Helpers.PasswordManagers;
 
@@ -20,7 +19,11 @@ public class AuthService : IAuthService
     private readonly IPasswordManager _passwordManager;
     private readonly MyBlogContext _context;
     
-    public AuthService(IUserService userService, IConfiguration config, IPasswordManager passwordManager, MyBlogContext context)
+    public AuthService(
+        IUserService userService,
+        IConfiguration config,
+        IPasswordManager passwordManager,
+        MyBlogContext context)
     {
         _userService = userService;
         _config = config;
@@ -38,7 +41,7 @@ public class AuthService : IAuthService
              IsSubscribedToEmail = isSubscribeToEmail
          };
 
-         await _context.UserSubscriptions.AddAsync(userSubscription);
+         await _context.Subscriptions.AddAsync(userSubscription);
          await _context.SaveChangesAsync();
     }
 

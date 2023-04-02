@@ -3,9 +3,9 @@ namespace MyBlog.Infrastructure.Entities;
 public class Comment
 {
     public int Id { get; set; }
-    public string Text { get; set; }
-    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-    public DateTime DateUpdated { get; set; }
+    public string Data { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedDate { get; set; }
     
     public int? UserId { get; set; }
     public User User { get; set; }

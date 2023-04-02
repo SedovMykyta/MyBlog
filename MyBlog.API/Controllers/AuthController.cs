@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyBlog.Service.Areas.Auth;
 using MyBlog.Service.Areas.Mailing;
 using MyBlog.Service.Areas.Users.AutoMapper.Dto;
-using MyBlog.Service.Areas.Users.Dto;
 
 namespace MyBlog.Controllers;
 
@@ -36,7 +35,7 @@ public class AuthController : ControllerBase
     {
         await _authService.RegisterAsync(userInput, isSubscribeToEmail);
 
-        await _mailingService.SendEmailToUserAsync("You successfully registered on site 'My Blog'.", userInput.Email);
+        await _mailingService.SendEmailToUserAsync(userInput.Email, "You successfully registered on site 'My Blog'.");
 
         return Ok();
     }

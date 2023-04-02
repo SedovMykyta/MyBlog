@@ -7,5 +7,5 @@ public class UserDto
     public string LastName { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
-    public DateTime DateCreateAccount { get; set; }
+    public DateTime CreatedDate { get; set; }
 }

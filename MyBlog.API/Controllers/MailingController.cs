@@ -69,7 +69,7 @@ public class MailingController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> SubscribeAsync()
     {
-        await _mailingService.SubscribeAsync(_currentUserJwtInfo.Result.Id);
+        await _mailingService.SubscribeAsync(_currentUserJwtInfo.Result.UserId);
         
         return Ok();
     }
@@ -85,7 +85,7 @@ public class MailingController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UnsubscribeAsync()
     {
-        await _mailingService.UnsubscribeAsync(_currentUserJwtInfo.Result.Id);
+        await _mailingService.UnsubscribeAsync(_currentUserJwtInfo.Result.UserId);
         
         return Ok();
     }
