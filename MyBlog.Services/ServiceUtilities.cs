@@ -7,7 +7,7 @@ namespace MyBlog.Service;
 
 public static class ServiceUtilities
 {
-    public static void ThrowIfUserCannotEditAccess(int userId, JwtInfoDto userToken)
+    public static void ThrowIfUserCannotEditAccess(int? userId, JwtInfoDto userToken)
     {
         if (userId != userToken.UserId && userToken.Role != Role.Admin)
         {

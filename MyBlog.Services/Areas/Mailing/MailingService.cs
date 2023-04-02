@@ -32,7 +32,7 @@ public class MailingService : IMailingService
 
         foreach (var email in recipientEmails)
         {
-            await SendEmailToUserAsync(message, email);
+            await SendEmailToUserAsync(email, message);
         }
     }
 

@@ -68,7 +68,7 @@ public class CommentService : ICommentService
     {
         var comment = await GetCommentByIdAsync(id);
         
-        ThrowIfUserCannotEditAccess(id, userToken);
+        ThrowIfUserCannotEditAccess(comment.UserId, userToken);
 
         _mapper.Map(commentInput, comment);
 
@@ -84,7 +84,7 @@ public class CommentService : ICommentService
     {
         var comment = await GetCommentByIdAsync(id);
         
-        ThrowIfUserCannotEditAccess(id, userToken);
+        ThrowIfUserCannotEditAccess(comment.UserId, userToken);
 
         _context.Comments.Remove(comment);
         await _context.SaveChangesAsync();
