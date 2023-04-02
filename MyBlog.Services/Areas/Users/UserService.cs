@@ -50,14 +50,14 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public async Task<User> GetByLoginAsync(UserDtoLogin userLogin)
+    public async Task<User> GetByLoginAsync(UserLoginDto userLogin)
     {
         var user = await GetUserByEmailAsync(userLogin.Email);
 
         return user;
     }
     
-    public async Task<UserDto> CreateAsync(UserDtoInput userInput)
+    public async Task<UserDto> CreateAsync(UserInputDto userInput)
     {
         await ThrowIfEmailOrPhoneExistAsync(userInput);
 
@@ -73,7 +73,7 @@ public class UserService : IUserService
         return userDto;
     } 
     
-    public async Task<UserDto> UpdateByIdAsync(int id, UserDtoInput userInput)
+    public async Task<UserDto> UpdateByIdAsync(int id, UserInputDto userInput)
     {
         var user = await GetUserByIdAsync(id);
 
@@ -115,7 +115,7 @@ public class UserService : IUserService
         return user;
     }
 
-    private async Task ThrowIfEmailOrPhoneExistAsync(UserDtoInput userInput, int id = -1)
+    private async Task ThrowIfEmailOrPhoneExistAsync(UserInputDto userInput, int id = -1)
     {
         var isEmailBusy = await _context.Users.AnyAsync(user => user.Email == userInput.Email && user.Id != id);
         var isPhoneBusy = await _context.Users.AnyAsync(user => user.Phone == userInput.Phone && user.Id != id);

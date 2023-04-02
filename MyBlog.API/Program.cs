@@ -31,7 +31,7 @@ builder.Services.AddControllers(config => config.Filters.Add<ValidationFilter>()
 builder.Services.AddDbContext<MyBlogContext>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("MyBlogDatabase")));
 
-builder.Services.AddValidatorsFromAssemblyContaining<UserDtoInputValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserInputDtoValidator>();
 builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true)
     .AddFluentValidationAutoValidation(); 
 builder.Services.AddFluentValidationClientsideAdapters(); 
@@ -51,7 +51,7 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof
 
 builder.Services.AddAutoMapper(typeof(UserMappingProfile), typeof(ArticleMappingProfile), typeof(CommentMappingProfile));
 
-builder.Services.AddSingleton<UserDtoInputValidator>();
+builder.Services.AddSingleton<UserInputDtoValidator>();
 
 builder.Services.AddCors();
 

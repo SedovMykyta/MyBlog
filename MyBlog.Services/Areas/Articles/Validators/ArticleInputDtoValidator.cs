@@ -4,11 +4,11 @@ using MyBlog.Service.Exception;
 
 namespace MyBlog.Service.Areas.Articles.Validators;
 
-public class ArticleDtoInputValidator: AbstractValidator<ArticleDtoInput>
+public class ArticleInputDtoValidator: AbstractValidator<ArticleInputDto>
 {
     private const int MaxSizeImage = 4_194_304;
     
-    public ArticleDtoInputValidator()
+    public ArticleInputDtoValidator()
     {
         RuleFor(article => article.Title)
             .Length(6, 100).WithMessage("Length must be between 6 and 100 characters");

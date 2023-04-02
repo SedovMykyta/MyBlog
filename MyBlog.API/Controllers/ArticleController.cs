@@ -110,14 +110,14 @@ public class ArticleController : ControllerBase
     /// <summary>
     /// Create Article
     /// </summary>
-    /// <param name="articleInput">ArticleDtoInput object</param>
+    /// <param name="articleInput">ArticleInputDtoDto object</param>
     /// <returns>Created ArticleDto object</returns>
     /// <response code="200">Success</response>
     /// <response code="400">TitleExists</response>
     [HttpPost]
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromForm] ArticleDtoInput articleInput)
+    public async Task<IActionResult> CreateAsync([FromForm] ArticleInputDto articleInput)
     {
         var article = await _articleService.CreateAsync(articleInput, _currentUserJwtInfo.Result);
 
@@ -128,7 +128,7 @@ public class ArticleController : ControllerBase
     /// Update Article by id
     /// </summary>
     /// <param name="id">Article id</param>
-    /// <param name="articleInput">ArticleDtoInput object</param>
+    /// <param name="articleInput">ArticleInputDto object</param>
     /// <returns>Updated ArticleDto object</returns>
     /// <response code="200">Success</response>
     /// <response code="400">TitleExists, NotAccess</response>
@@ -137,7 +137,7 @@ public class ArticleController : ControllerBase
     [ProducesResponseType(typeof(ArticleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromForm] ArticleDtoInput articleInput)
+    public async Task<IActionResult> UpdateByIdAsync([FromRoute] int id, [FromForm] ArticleInputDto articleInput)
     {
         var article = await _articleService.UpdateByIdAsync(id, articleInput, _currentUserJwtInfo.Result);
 
