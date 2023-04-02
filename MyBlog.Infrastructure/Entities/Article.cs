@@ -9,8 +9,8 @@ public class Article
     public string Description { get; set; }
     public string FullText { get; set; }
     public string ImageBase64 { get; set; }
-    public DateTime DateCreate { get; set; } = DateTime.UtcNow;
-    public DateTime DateUpdated { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
     public Topic Topic { get; set; }
     
     public int UserId { get; set; } 

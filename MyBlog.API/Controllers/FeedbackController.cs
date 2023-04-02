@@ -39,7 +39,7 @@ public class FeedbackController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LikeArticleByIdAsync([FromRoute] int articleId)
     {
-        await _ratingService.LikeByIdAsync(articleId, _currentUserJwtInfo.Result.Id);
+        await _ratingService.LikeByIdAsync(articleId, _currentUserJwtInfo.Result.UserId);
         
         return Ok();
     }
@@ -56,7 +56,7 @@ public class FeedbackController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DislikeArticleByIdAsync([FromRoute] int articleId)
     {
-        await _ratingService.DislikeByIdAsync(articleId, _currentUserJwtInfo.Result.Id);
+        await _ratingService.DislikeByIdAsync(articleId, _currentUserJwtInfo.Result.UserId);
         
         return Ok();
     }

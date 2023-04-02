@@ -7,9 +7,9 @@ namespace MyBlog.Middlewares.ExceptionHandling;
 
 public class ExceptionHandlingMiddleware
 {
+    private const HttpStatusCode InternalServerErrorMessage = HttpStatusCode.InternalServerError;
     private readonly RequestDelegate _next;
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-    private const string InternalServerErrorMessage = "Internal Server Error";
 
     public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
@@ -47,10 +47,9 @@ public class ExceptionHandlingMiddleware
         }
         else
         {
-            response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            errorDto.ErrorMessage = InternalServerErrorMessage;
+            response.StatusCode = (int)InternalServerErrorMessage;
+            errorDto.ErrorMessage = InternalServerErrorMessage.ToString();
         }
-
 
         await response.WriteAsJsonAsync(errorDto, new JsonSerializerOptions(JsonSerializerDefaults.Web));
     }

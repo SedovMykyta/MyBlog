@@ -1,5 +1,4 @@
 ﻿using MyBlog.Service.Areas.Users.AutoMapper.Dto;
-using MyBlog.Service.Areas.Users.Dto;
 
 namespace MyBlog.Service.Areas.Auth;
 

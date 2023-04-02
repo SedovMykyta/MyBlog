@@ -63,20 +63,20 @@ public class RatingService : IRatingService
         await _articleService.GetByIdAsync(id);
     }
 
-    private async Task<Dislike?> GetDislikeAsync(int articleId, int userId)
-    {
-        var dislike = await _context.Dislikes.FirstOrDefaultAsync
-            (dislike => dislike.ArticleId == articleId && dislike.UserId == userId);
-
-        return dislike;
-    }
-    
     private async Task<Like?> GetLikeAsync(int articleId, int userId)
     {
-        var like = await _context.Likes.
-            FirstOrDefaultAsync(like => like.ArticleId == articleId && like.UserId == userId);
+        var like = await _context.Likes
+            .FirstOrDefaultAsync(like => like.ArticleId == articleId && like.UserId == userId);
         
         return like;
+    }
+    
+    private async Task<Dislike?> GetDislikeAsync(int articleId, int userId)
+    {
+        var dislike = await _context.Dislikes
+            .FirstOrDefaultAsync(dislike => dislike.ArticleId == articleId && dislike.UserId == userId);
+
+        return dislike;
     }
 
     private async Task RemoveLikeAsync(Like like)

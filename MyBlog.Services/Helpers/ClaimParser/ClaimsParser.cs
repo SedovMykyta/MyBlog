@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using MyBlog.Service.Helpers.ClaimParser.Dto;
 using static System.Int32;
+using static MyBlog.Service.ServiceUtilities;
 
 namespace MyBlog.Service.Helpers.ClaimParser;
 
@@ -10,8 +11,8 @@ public class ClaimsParser : IClaimsParser
     {
         return identity == null ? throw new UnauthorizedAccessException() : new JwtInfoDto
         {
-            Id = Parse(identity.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value!),
-            Role = identity.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value!
+            UserId = Parse(identity.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value!),
+            Role = CastStringToRole(identity.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value!) 
         };
     }
 }

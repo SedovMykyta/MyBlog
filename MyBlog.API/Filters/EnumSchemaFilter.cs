@@ -8,7 +8,7 @@ public class EnumSchemaFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema model, SchemaFilterContext context)
     {
-        if (!context.Type.IsEnum)
+        if (! context.Type.IsEnum)
         {
             return;
         }

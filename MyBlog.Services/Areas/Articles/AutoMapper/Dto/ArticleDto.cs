@@ -11,6 +11,6 @@ public class ArticleDto
     public string FullText { get; set; }
     public Topic Topic { get; set; }
     public string ImageBase64 { get; set; }
-    public DateTime DateCreate { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; }
 }

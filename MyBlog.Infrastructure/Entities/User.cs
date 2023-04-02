@@ -11,7 +11,7 @@ public class User
     public string Email { get; set; }
     public string Phone { get; set; }
     public Role Role { get; set; }
-    public DateTime DateCreateAccount { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
     public IList<Article>? Articles { get; set; } 
     public IList<Comment> Comments { get; set; }
